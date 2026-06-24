@@ -1,0 +1,13 @@
+ollama>=0.1.0
+
+# API / backend (optional)
+fastapi>=0.110
+uvicorn>=0.29
+
+# Data + embeddings (optional, for RAG later)
+numpy>=1.26
+pydantic>=2.6
+sentence-transformers>=2.5
+
+# Storage (optional)
+supabase>=2.4
