@@ -20,15 +20,7 @@ const SUGGESTIONS = [
   "Tips for better sleep & wellbeing",
 ];
 
-const Chat = () => {
-  const [messages, setMessages] = useState([
-    {
-      id: 1,
-      text: "Hello! I'm Nereid, your compassionate AI companion. I'm here to listen, support, and help you navigate whatever you're going through. How are you feeling today?",
-      sender: 'nereid',
-      timestamp: new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }),
-    },
-  ]);
+const Chat = ({ messages = [], onUpdateMessages }) => {
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
 
@@ -48,7 +40,8 @@ const Chat = () => {
       timestamp: new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }),
     };
 
-    setMessages(prev => [...prev, userMessage]);
+    const currentHistory = [...messages, userMessage];
+    onUpdateMessages(currentHistory);
     setIsTyping(true);
 
     try {
@@ -65,9 +58,10 @@ const Chat = () => {
         text: response.data.reply,
         sender: 'nereid',
         timestamp: new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }),
+        analysis: response.data.analysis, // Capture emotional analysis metadata from API response
       };
 
-      setMessages(prev => [...prev, nereidMessage]);
+      onUpdateMessages([...currentHistory, nereidMessage]);
     } catch (error) {
       console.error('Error sending message:', error);
       let errorText = "I'm sorry, something went wrong. ";
@@ -78,7 +72,7 @@ const Chat = () => {
       } else {
         errorText += error.message || "Please check your connection and try again.";
       }
-      setMessages(prev => [...prev, {
+      onUpdateMessages([...currentHistory, {
         id: Date.now() + 1,
         text: errorText,
         sender: 'nereid',
@@ -89,7 +83,7 @@ const Chat = () => {
     }
   };
 
-  const showWelcome = messages.length === 1;
+  const showWelcome = messages.length <= 1;
 
   return (
     <div className="chat-container">
