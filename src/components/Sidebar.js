@@ -51,7 +51,7 @@ const Sidebar = ({
       {/* ── Brand Header ── */}
       <div className="sidebar-header">
         <div className="logo-container">
-          <div className="logo-icon-wrap animate-glow">
+          <div className="logo-icon-wrap">
             <NereidIcon />
           </div>
           <span className="logo-text">Nereid</span>
