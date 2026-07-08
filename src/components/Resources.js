@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Phone, MessageSquare, AlertCircle, Wind, Sparkles, BookOpen, ShieldAlert } from 'lucide-react';
+import { Phone, MessageSquare, AlertCircle, Wind, BookOpen, ShieldAlert } from 'lucide-react';
 import './Resources.css';
 
 const SELF_CARE_TIPS = [

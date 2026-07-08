@@ -1,5 +1,5 @@
 import React from 'react';
-import { TrendingUp, BarChart2, Smile, AlertTriangle, Calendar, Heart, ShieldAlert, Info } from 'lucide-react';
+import { TrendingUp, BarChart2, Smile, AlertTriangle, Calendar, Heart, Info } from 'lucide-react';
 import './Insights.css';
 
 const Insights = ({ chats = [] }) => {
