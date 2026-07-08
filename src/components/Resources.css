@@ -1,0 +1,403 @@
+/* ─── Resources Layout ────────────────────────────────────── */
+.resources-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--bg-base);
+  position: relative;
+}
+
+.resources-container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(ellipse 50% 40% at 80% 10%, rgba(20, 184, 166, 0.04) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 30% at 20% 90%, rgba(59, 130, 246, 0.03) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Header ── */
+.resources-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(22, 27, 34, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 5;
+  flex-shrink: 0;
+}
+
+.resources-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.3px;
+}
+
+.resources-subtitle {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+/* ── Content Grid ── */
+.resources-content {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  padding: 24px;
+  overflow-y: auto;
+  z-index: 1;
+}
+
+@media (max-width: 1024px) {
+  .resources-content {
+    grid-template-columns: 1fr;
+  }
+}
+
+.resources-left, .resources-right {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ── Resource Card Base ── */
+.resource-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.resource-card:hover {
+  border-color: var(--border-hover);
+}
+
+.card-header-icon {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.card-header-icon h2 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.text-teal {
+  color: var(--teal-400);
+}
+
+.text-red {
+  color: #ef4444;
+}
+
+.card-desc {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+/* ── Breathing Exercise ── */
+.breathing-card {
+  align-items: center;
+  text-align: center;
+}
+
+.breathing-exercise-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 10px 0;
+  gap: 24px;
+  width: 100%;
+}
+
+.breathing-circle {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(20, 184, 166, 0.15) 0%, rgba(20, 184, 166, 0.05) 100%);
+  border: 2px solid rgba(20, 184, 166, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 4s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.5s, box-shadow 0.5s;
+  box-shadow: 0 0 20px rgba(20, 184, 166, 0.1);
+  position: relative;
+}
+
+.breathing-inner-circle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.breathing-instruction {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--teal-300);
+}
+
+.breathing-timer {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+/* Breathing States */
+.breathing-circle.idle {
+  transform: scale(1);
+  border-color: rgba(20, 184, 166, 0.3);
+  box-shadow: 0 0 20px rgba(20, 184, 166, 0.1);
+}
+
+.breathing-circle.inhale {
+  transform: scale(1.4);
+  border-color: var(--teal-400);
+  box-shadow: 0 0 40px rgba(20, 184, 166, 0.4), inset 0 0 20px rgba(20, 184, 166, 0.2);
+}
+
+.breathing-circle.hold {
+  transform: scale(1.4);
+  border-color: var(--teal-300);
+  box-shadow: 0 0 50px rgba(20, 184, 166, 0.5), inset 0 0 25px rgba(20, 184, 166, 0.25);
+  animation: hold-pulse 1s ease-in-out infinite alternate;
+}
+
+.breathing-circle.exhale {
+  transform: scale(0.9);
+  border-color: rgba(20, 184, 166, 0.2);
+  box-shadow: 0 0 10px rgba(20, 184, 166, 0.05);
+}
+
+.breathing-circle.hold_empty {
+  transform: scale(0.9);
+  border-color: rgba(20, 184, 166, 0.15);
+  box-shadow: 0 0 5px rgba(20, 184, 166, 0.02);
+}
+
+@keyframes hold-pulse {
+  from { transform: scale(1.4); }
+  to { transform: scale(1.43); }
+}
+
+.breathing-btn {
+  padding: 8px 18px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  border-radius: var(--radius-md);
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.breathing-btn:hover {
+  background: var(--bg-hover);
+  border-color: var(--teal-400);
+  color: var(--teal-400);
+}
+
+.breathing-btn.active {
+  background: var(--teal-glow);
+  border-color: var(--teal-500);
+  color: var(--teal-400);
+}
+
+/* ── Crisis Channels ── */
+.crisis-card {
+  border-color: rgba(239, 68, 68, 0.15);
+}
+
+.crisis-card:hover {
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.crisis-channels {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.crisis-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px;
+  background: rgba(239, 68, 68, 0.03);
+  border: 1px solid rgba(239, 68, 68, 0.1);
+  border-radius: var(--radius-md);
+  transition: background 0.15s;
+}
+
+.crisis-item:hover {
+  background: rgba(239, 68, 68, 0.06);
+}
+
+.crisis-icon-wrap {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.crisis-details {
+  flex: 1;
+}
+
+.crisis-details h3 {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.crisis-meta {
+  font-size: 10px;
+  color: var(--text-secondary);
+  margin-top: 1px;
+}
+
+.crisis-link {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #f87171;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.crisis-link:hover {
+  color: #ef4444;
+  text-decoration: underline;
+}
+
+/* ── Self Care Articles / Search ── */
+.search-tips-card {
+  flex: 1;
+}
+
+.search-wrap {
+  margin-bottom: 20px;
+}
+
+.resources-search-input {
+  width: 100%;
+  padding: 10px 14px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 13px;
+  font-family: 'Inter', sans-serif;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.resources-search-input:focus {
+  outline: none;
+  border-color: var(--teal-500);
+  box-shadow: 0 0 8px var(--teal-glow);
+}
+
+.tips-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow-y: auto;
+}
+
+.tip-item {
+  padding: 16px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  transition: transform 0.15s, border-color 0.15s;
+}
+
+.tip-item:hover {
+  transform: translateY(-1px);
+  border-color: var(--border-hover);
+}
+
+.tip-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.tip-category {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--teal-400);
+}
+
+.tip-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.tip-desc {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+
+.tip-steps {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text-primary);
+  background: rgba(0,0,0,0.1);
+  padding: 10px 12px;
+  border-radius: 8px;
+}
+
+.tip-steps li {
+  line-height: 1.4;
+}
+
+.no-results {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  color: var(--text-muted);
+  gap: 12px;
+  font-size: 13px;
+}
