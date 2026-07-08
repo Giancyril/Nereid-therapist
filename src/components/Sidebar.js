@@ -5,10 +5,25 @@ import './Sidebar.css';
 const NereidIcon = () => (
   <svg className="nereid-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     {/* Sparkling waves */}
-    <path d="M2 13C6.8 8.2 9.2 13.8 14 9C18.8 4.2 18.2 9.8 22 5" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-    <path d="M2 17C6.8 12.2 9.2 17.8 14 13C18.8 8.2 18.2 13.8 22 9" stroke="rgba(255,255,255,0.4)" strokeWidth="1.5" strokeLinecap="round"/>
-    <circle cx="18" cy="14" r="1" fill="#2dd4bf"/>
-    <path d="M7 6L7.8 7.5L9.5 8L7.8 8.5L7 10L6.2 8.5L4.5 8L6.2 7.5L7 6Z" fill="#5eead4"/>
+    <path 
+      d="M3 11C7 7 9 13 13 9C17 5 17 11 21 7" 
+      stroke="white" 
+      strokeWidth="2" 
+      strokeLinecap="round"
+    />
+    <path 
+      d="M3 16C7 12 9 18 13 14C17 10 17 16 21 12" 
+      stroke="rgba(255,255,255,0.4)" 
+      strokeWidth="1.5" 
+      strokeLinecap="round"
+    />
+    {/* Sparkle */}
+    <path 
+      d="M7 4L7.7 5.7L9.4 6.4L7.7 7.1L7 8.8L6.3 7.1L4.6 6.4L6.3 5.7L7 4Z" 
+      fill="#5eead4"
+    />
+    {/* Bubble */}
+    <circle cx="17" cy="17" r="1.2" fill="#5eead4" />
   </svg>
 );
 
