@@ -1,42 +1,133 @@
-# Nereid - AI Assistant Chat Interface
+# Nereid — AI Companion & Mental Wellness Chat
 
-## Description
-
-**Nereid** is a modern, full-stack AI chat application that provides an intuitive web-based interface for interacting with an AI assistant. Built with React for the frontend and FastAPI for the backend, Nereid connects to Ollama's local language models to deliver responsive, conversational AI interactions.
-
-The application features a sleek, modern UI with a dark ocean theme using teal/blue gradients, sidebar navigation, and real-time messaging capabilities. Users can have natural conversations with the AI companion through a clean, chat-based interface that resembles premium modern messaging applications.
-
-### Key Components
-
-- **Frontend (React)**: Modern single-page application with component-based architecture
-- **Backend (FastAPI)**: RESTful API server that bridges the React frontend with Ollama
-- **AI Engine (Ollama)**: Local LLM inference using models like Llama 3.2
-- **Real-time Chat**: Instant messaging interface with message history and typing indicators
+A production-grade, AI-powered mental wellness companion designed for emotionally intelligent, real-time conversational support. Features compassionate multi-turn dialogue using local Ollama LLMs, real-time emotional sentiment classification with urgency triage, multi-session chat persistence with localStorage, interactive guided breathing exercises, mood analytics with custom SVG trend charts, a curated self-care resource library with crisis helplines, modern glassmorphism UI, and a fully responsive collapsible sidebar with Lucide icon navigation.
 
 ## Features
 
-- Modern, clean React interface matching the design
-- Real-time chat with Nereid AI assistant
-- Responsive sidebar navigation
-- Beautiful dark ocean theme with teal/blue gradients and glassmorphism elements
-- FastAPI backend connecting React to Ollama
+### Core Functionality
+- **AI Conversational Support**: Multi-turn compassionate dialogue powered by `llama3.2:latest` via Ollama. Maintains full conversation history for contextually aware responses across the session.
+- **Emotional Sentiment Triage**: Every user message is classified in real-time by a dual-layer classifier — Ollama-based zero-shot intent detection with a robust keyword-matching fallback — producing structured `emotional_state`, `urgency`, `intent`, and `topics` metadata.
+- **Multi-Session Chat Management**: Create, switch, rename, and delete multiple independent conversation sessions. Session titles are auto-generated from the first user message.
+- **LocalStorage Persistence**: All conversations and emotional analysis metadata are automatically serialized and persisted to the browser's `localStorage`, surviving page refreshes and tab closures.
+- **Tab-Based Navigation**: Four fully functional sidebar tabs — Chat, History, Resources, Insights — each rendering a dedicated view component within the same layout shell.
 
-## Prerequisites
+### Advanced Features
+- **Guided Box Breathing Bubble**: An interactive animated breathing exercise component on the Resources tab. A glassmorphic circle expands and contracts rhythmically through a 4-phase box breathing cycle (Inhale → Hold → Exhale → Hold Empty), driven by CSS keyframe transforms and a React interval timer.
+- **Mood & Insights Analytics**: The Insights tab renders live emotional analysis derived from accumulated chat history — including a custom animated SVG Bézier line chart tracking distress trends over the last 10 messages, horizontal topic bar charts, mood distribution progress bars, and a personalized actionable wellbeing advice card.
+- **Reflection History Dashboard**: The History tab displays a searchable grid of all past chat sessions as styled cards — including last message preview, auto-detected mood tag pills, and a one-click resume button that instantly switches the active chat session.
+- **Crisis & Self-Help Resources**: The Resources tab provides a searchable library of evidence-based self-care exercises (5-4-3-2-1 grounding, sleep hygiene, journaling prompts), alongside prominently displayed emergency crisis hotlines (988 Lifeline, Crisis Text Line, international helpline locator).
+- **Keyword Sentiment Fallback**: A zero-dependency, latency-free local classifier handles emotional routing when the Ollama model is offline or slow — detecting crisis language, high distress, moderate anxiety, sadness, sleep issues, and professional help-seeking patterns via keyword heuristics.
+- **Collapsible Sidebar**: Smooth `cubic-bezier` animated sidebar with icon-only collapsed mode. Includes a recent chats list with hover-reveal delete controls, active session highlighting, and full Lucide React icon integration.
 
-- Node.js (v16 or higher) and npm
-- Python 3.8 or higher
-- Ollama installed and running ([Download Ollama](https://ollama.ai/))
-- The `llama3.2:latest` model (or any other model you prefer)
+---
 
-## Setup Instructions
+## Tech Stack
 
-### 1. Install Ollama and Download Model
+### Backend
+- **Python** with **FastAPI** and **Uvicorn** ASGI server.
+- **Ollama Python SDK** for local LLM inference via the `llama3.2:latest` model.
+- **Pydantic** for strict request/response schema validation.
+- **CORS Middleware** configured for secure React frontend access on `localhost:3000`.
+- **Dual-layer Emotional Classifier**: Ollama zero-shot JSON intent extraction with keyword-based fallback routing.
 
-If you haven't already:
+### Frontend
+- **React 18** with functional components and hooks.
+- **Axios** for API communication with the FastAPI backend.
+- **Lucide React** for clean, consistent vector icon system.
+- **Vanilla CSS** with custom CSS variables for the dark glassmorphism design system.
+- **localStorage API** for client-side session and message persistence.
+- **Custom SVG Charts**: Hand-crafted Bézier curve line charts and progress bar analytics — no external charting libraries.
+
+---
+
+## System Architecture
+
+```mermaid
+graph TD
+    subgraph Client ["Frontend (React 18)"]
+        Sidebar["Sidebar Navigation (Lucide Icons)"]
+        ChatView["Chat View (Multi-session)"]
+        HistoryView["History Dashboard"]
+        ResourcesView["Resources + Breathing Exercise"]
+        InsightsView["Insights Dashboard (SVG Charts)"]
+        LocalStore["localStorage Persistence"]
+    end
+
+    subgraph Server ["Backend (FastAPI / Uvicorn)"]
+        ChatEndpoint["POST /api/chat"]
+        Classifier["Dual-Layer Emotional Classifier"]
+        OllamaRouter["Ollama Intent Router (JSON)"]
+        KeywordFallback["Keyword Fallback Heuristic"]
+        OllamaChat["Ollama Chat (llama3.2:latest)"]
+    end
+
+    subgraph AI ["Local AI Engine"]
+        OllamaServer["Ollama Server (localhost:11434)"]
+        LLM["llama3.2:latest Model"]
+    end
+
+    ChatView <--> LocalStore
+    ChatView --> ChatEndpoint
+    HistoryView --> LocalStore
+    InsightsView --> LocalStore
+    ChatEndpoint --> OllamaChat
+    ChatEndpoint --> Classifier
+    Classifier --> OllamaRouter
+    Classifier --> KeywordFallback
+    OllamaChat --> OllamaServer
+    OllamaRouter --> OllamaServer
+    OllamaServer --> LLM
+```
+
+---
+
+## Project Structure
+
+```
+nereid-therapist/
+├── src/                            # React frontend source
+│   ├── components/
+│   │   ├── Sidebar.js              # Collapsible nav with Lucide icons & recent chats
+│   │   ├── Sidebar.css
+│   │   ├── Chat.js                 # Multi-turn chat interface
+│   │   ├── Chat.css
+│   │   ├── MessageInput.js         # Auto-resizing textarea input
+│   │   ├── MessageInput.css
+│   │   ├── HistoryView.js          # Past sessions dashboard with search
+│   │   ├── HistoryView.css
+│   │   ├── Resources.js            # Guided breathing + crisis resources
+│   │   ├── Resources.css
+│   │   ├── Insights.js             # SVG mood charts + analytics
+│   │   └── Insights.css
+│   ├── App.js                      # Root state: multi-chat, tab routing, localStorage
+│   ├── App.css
+│   ├── index.js
+│   └── index.css                   # Global design tokens & dark theme variables
+│
+├── public/
+│   └── index.html
+│
+├── api_server.py                   # FastAPI backend + emotional classifier
+├── ml.py                           # Terminal-mode Nereid CLI with dual-layer routing
+├── requirements.txt
+├── package.json
+└── README.md
+```
+
+---
+
+## Setup & Running
+
+### Prerequisites
+
+- **Node.js** v16+ and **npm**
+- **Python** 3.8+
+- **Ollama** installed and running — [Download Ollama](https://ollama.ai/)
+- `llama3.2:latest` model pulled
+
+### 1. Pull the AI Model
 
 ```bash
-# Install Ollama from https://ollama.ai/
-# Then pull the model:
 ollama pull llama3.2:latest
 ```
 
@@ -52,89 +143,96 @@ pip install -r requirements.txt
 npm install
 ```
 
-## Running the Application
+### Running the Stack
 
-You need to run two servers:
+Open three terminal sessions:
 
-### Terminal 1: Start Ollama (if not already running)
-
+**Terminal 1 — Start Ollama:**
 ```bash
 ollama serve
 ```
 
-### Terminal 2: Start the FastAPI Backend
-
+**Terminal 2 — Start FastAPI Backend:**
 ```bash
 python api_server.py
 ```
+API available at `http://localhost:8000`
 
-The API server will start on `http://localhost:8000`
-
-### Terminal 3: Start the React Frontend
-
+**Terminal 3 — Start React Frontend:**
 ```bash
 npm start
 ```
+App available at `http://localhost:3000`
 
-The React app will open in your browser at `http://localhost:3000`
+---
 
-## Usage
+## API Documentation
 
-1. Make sure Ollama is running (`ollama serve`)
-2. Start the backend API server (`python api_server.py`)
-3. Start the React frontend (`npm start`)
-4. Open your browser to `http://localhost:3000`
-5. Start chatting with Nereid!
+- **Chat Endpoint**:
+  - `POST /api/chat` — Accepts user message + conversation history. Returns Nereid's reply and a structured `analysis` object containing `emotional_state`, `urgency`, `intent`, `topics`, and `needs_human` fields.
+- **Health Endpoints**:
+  - `GET /` — API status check.
+  - `GET /health` — Health probe returning `{ "status": "healthy" }`.
 
-## Project Structure
+### Chat Request Schema
 
+```json
+{
+  "message": "I've been feeling really anxious about work",
+  "conversation_history": [
+    { "role": "user", "content": "..." },
+    { "role": "assistant", "content": "..." }
+  ]
+}
 ```
-nereid-therapist-main/
-├── src/                    # React frontend source
-│   ├── components/         # React components
-│   │   ├── Sidebar.js      # Left navigation sidebar
-│   │   ├── Chat.js         # Main chat interface
-│   │   └── MessageInput.js # Message input component
-│   ├── App.js              # Main React app
-│   └── index.js            # React entry point
-├── public/                 # Public assets
-├── api_server.py           # FastAPI backend server
-├── ml.py                   # Original terminal-based chat (optional)
-├── package.json            # Node.js dependencies
-├── requirements.txt        # Python dependencies
-└── README.md              # This file
+
+### Chat Response Schema
+
+```json
+{
+  "reply": "That sounds really difficult. Would you like to talk about what's been on your mind?",
+  "success": true,
+  "analysis": {
+    "intent": "moderate_distress",
+    "urgency": "moderate",
+    "emotional_state": "anxious",
+    "topics": ["anxiety", "work_stress"],
+    "needs_human": "maybe",
+    "notes": "Analyzed via Ollama classifier."
+  }
+}
 ```
+
+---
 
 ## Configuration
 
-### Changing the AI Model
+### Change the AI Model
 
-Edit `api_server.py` and change the `MODEL` variable:
+Edit `api_server.py`:
 
 ```python
-MODEL = "llama3.2:latest"  # Change to your preferred model
+MODEL = "llama3.2:latest"  # Replace with any Ollama-supported model
 ```
 
-### Changing the Port
+### Change Ports
 
-- Backend: Edit `api_server.py` - change `port=8000` in the uvicorn.run() call
-- Frontend: Edit `.env` file (create one) with `PORT=3000`
+- **Backend**: Edit `uvicorn.run(app, host="0.0.0.0", port=8000)` in `api_server.py`.
+- **Frontend**: Set `PORT=3001` in a `.env` file at the project root.
+
+---
 
 ## Troubleshooting
 
-### "Connection refused" error
-- Make sure Ollama is running: `ollama serve`
-- Make sure the backend API is running: `python api_server.py`
-- Check that the model exists: `ollama list`
+| Symptom | Fix |
+|---|---|
+| `Could not reach the server` | Ensure `python api_server.py` is running on port 8000 |
+| `Error communicating with AI model` | Ensure `ollama serve` is running and the model is pulled |
+| Model not found | Run `ollama list` and pull with `ollama pull llama3.2:latest` |
+| CORS errors in browser | Verify `allow_origins` in `api_server.py` includes `http://localhost:3000` |
 
-### Model not found
-- Pull the model: `ollama pull llama3.2:latest`
-- Or change the model in `api_server.py` to one you have installed
-
-### CORS errors
-- Make sure the backend CORS settings in `api_server.py` allow your frontend URL
+---
 
 ## License
 
-This project is open source and available for personal use.
-
+This project is open source and available for personal and educational use.
