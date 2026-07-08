@@ -56,8 +56,13 @@
 }
 
 @keyframes logo-glow {
-  from { box-shadow: 0 0 8px rgba(20, 184, 166, 0.2); }
-  to { box-shadow: 0 0 16px rgba(20, 184, 166, 0.45); }
+  from {
+    box-shadow: 0 0 8px rgba(20, 184, 166, 0.2);
+  }
+
+  to {
+    box-shadow: 0 0 16px rgba(20, 184, 166, 0.45);
+  }
 }
 
 /* Nereid SVG wave icon */
@@ -256,7 +261,6 @@
   color: var(--text-secondary);
   font-size: 12px;
   position: relative;
-  group: true;
 }
 
 .recent-chat-item:hover {
