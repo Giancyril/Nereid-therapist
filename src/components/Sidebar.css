@@ -47,14 +47,21 @@
   flex-shrink: 0;
 }
 
+/* Logo pulse glow */
+.animate-glow {
+  box-shadow: 0 0 10px rgba(20, 184, 166, 0.2);
+  animation: logo-glow 3s ease-in-out infinite alternate;
+}
+
+@keyframes logo-glow {
+  from { box-shadow: 0 0 8px rgba(20, 184, 166, 0.2); }
+  to { box-shadow: 0 0 16px rgba(20, 184, 166, 0.45); }
+}
+
 /* Nereid SVG wave icon */
 .nereid-icon {
   width: 20px;
   height: 20px;
-  fill: none;
-  stroke: #fff;
-  stroke-width: 2;
-  stroke-linecap: round;
 }
 
 .logo-text {
@@ -93,10 +100,6 @@
   color: var(--text-primary);
 }
 
-.sidebar.collapsed .collapse-btn {
-  transform: rotate(180deg);
-}
-
 /* ── New Chat Button ── */
 .new-chat-btn {
   margin: 12px 10px;
@@ -129,7 +132,6 @@
 }
 
 .new-chat-btn .btn-plus {
-  font-size: 16px;
   flex-shrink: 0;
 }
 
@@ -146,7 +148,6 @@
 
 /* ── Nav ── */
 .sidebar-nav {
-  flex: 1;
   padding: 6px 8px;
   display: flex;
   flex-direction: column;
@@ -188,12 +189,18 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  font-size: 14px;
   background: var(--bg-elevated);
+  color: var(--text-secondary);
+  transition: all 0.15s;
 }
 
 .nav-item.active .nav-icon-wrap {
   background: rgba(20, 184, 166, 0.15);
+  color: var(--teal-400);
+}
+
+.nav-item:hover .nav-icon-wrap {
+  color: var(--text-primary);
 }
 
 .nav-label {
@@ -206,6 +213,102 @@
   opacity: 0;
   width: 0;
   overflow: hidden;
+}
+
+/* ── Recent Chats Section ── */
+.recent-chats-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 16px 8px 6px;
+  border-top: 1px solid var(--border);
+  margin-top: 8px;
+}
+
+.recent-chats-title {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  padding: 0 10px 8px;
+}
+
+.recent-chats-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.recent-chat-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  color: var(--text-secondary);
+  font-size: 12px;
+  position: relative;
+  group: true;
+}
+
+.recent-chat-item:hover {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+}
+
+.recent-chat-item.active {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-primary);
+}
+
+.chat-item-icon {
+  flex-shrink: 0;
+  opacity: 0.6;
+}
+
+.recent-chat-item.active .chat-item-icon {
+  color: var(--teal-400);
+  opacity: 1;
+}
+
+.chat-item-title {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 12px;
+}
+
+.chat-item-delete {
+  position: absolute;
+  right: 6px;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s, color 0.15s, background 0.15s;
+}
+
+.recent-chat-item:hover .chat-item-delete {
+  opacity: 1;
+}
+
+.chat-item-delete:hover {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
 }
 
 /* ── Footer ── */
@@ -264,4 +367,8 @@
   opacity: 0;
   width: 0;
   overflow: hidden;
+}
+
+.sidebar.collapsed .recent-chats-container {
+  display: none;
 }
