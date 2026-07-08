@@ -1,0 +1,424 @@
+/* ─── Insights Layout ──────────────────────────────────────── */
+.insights-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--bg-base);
+  position: relative;
+}
+
+.insights-container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(ellipse 50% 40% at 75% 15%, rgba(59, 130, 246, 0.04) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 30% at 25% 85%, rgba(20, 184, 166, 0.03) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Header ── */
+.insights-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(22, 27, 34, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 5;
+  flex-shrink: 0;
+}
+
+.insights-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.3px;
+}
+
+.insights-subtitle {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.last-updated-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+/* ── Empty State ── */
+.insights-empty-state {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px;
+  max-width: 440px;
+  margin: 0 auto;
+  gap: 16px;
+  z-index: 1;
+}
+
+.empty-icon-wrap {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-sm);
+  color: var(--text-muted);
+}
+
+.insights-empty-state h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.insights-empty-state p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* ── Content Grid ── */
+.insights-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  z-index: 1;
+}
+
+/* ── Overview Cards ── */
+.insights-grid-three {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .insights-grid-three {
+    grid-template-columns: 1fr;
+  }
+}
+
+.insight-stat-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px 20px;
+  box-shadow: var(--shadow-sm);
+}
+
+.insight-stat-card h3 {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+}
+
+.insight-stat-card .stat-val {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.insight-stat-card .stat-desc {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 6px;
+  line-height: 1.4;
+}
+
+/* Dominant Mood colors */
+.mood-icon-anxious { color: var(--teal-400); }
+.mood-icon-overwhelmed { color: #38bdf8; }
+.mood-icon-sad { color: #c084fc; }
+.mood-icon-happy { color: #fde047; }
+.mood-icon-neutral { color: #9ca3af; }
+.mood-icon-crisis { color: #ef4444; }
+
+/* ── Charts Rows ── */
+.insights-charts-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 16px;
+}
+
+@media (max-width: 1024px) {
+  .insights-charts-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.insight-chart-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+}
+
+.insight-chart-card .chart-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.insight-chart-card .chart-header h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.insight-chart-card .chart-desc {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+}
+
+/* ── SVG Trend Chart ── */
+.trend-chart-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 160px;
+}
+
+.svg-chart-wrap {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+}
+
+.trend-svg {
+  flex: 1;
+  max-height: 160px;
+}
+
+.chart-y-axis-labels {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px 0 10px 10px;
+  font-size: 9px;
+  color: var(--text-muted);
+  text-align: right;
+  border-left: 1px solid rgba(255,255,255,0.03);
+  height: 130px;
+}
+
+.trend-dot {
+  cursor: pointer;
+  transition: r 0.15s;
+}
+
+.trend-dot:hover {
+  r: 6px;
+}
+
+.chart-fallback {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+/* ── Mood Bars Breakdown ── */
+.mood-bars-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mood-progress-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mood-progress-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.mood-name {
+  color: var(--text-primary);
+}
+
+.mood-count {
+  color: var(--text-secondary);
+}
+
+.mood-progress-bar-bg {
+  height: 8px;
+  background: var(--bg-elevated);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.mood-progress-bar-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width 0.4s ease-out;
+}
+
+.bar-anxious { background: var(--teal-500); }
+.bar-overwhelmed { background: #0284c7; }
+.bar-sad { background: #9333ea; }
+.bar-happy { background: #eab308; }
+.bar-neutral { background: #4b5563; }
+.bar-crisis { background: #dc2626; }
+
+/* ── Bottom Grid ── */
+.insights-bottom-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 900px) {
+  .insights-bottom-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Advice Card ── */
+.advice-card {
+  background: var(--bg-surface);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  border-width: 1px;
+  border-style: solid;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.advice-card.border-teal { border-color: rgba(20, 184, 166, 0.15); background: radial-gradient(ellipse at bottom left, rgba(20, 184, 166, 0.02) 0%, var(--bg-surface) 70%); }
+.advice-card.border-blue { border-color: rgba(59, 130, 246, 0.15); background: radial-gradient(ellipse at bottom left, rgba(59, 130, 246, 0.02) 0%, var(--bg-surface) 70%); }
+.advice-card.border-purple { border-color: rgba(167, 139, 250, 0.15); background: radial-gradient(ellipse at bottom left, rgba(167, 139, 250, 0.02) 0%, var(--bg-surface) 70%); }
+.advice-card.border-red { border-color: rgba(239, 68, 68, 0.15); background: radial-gradient(ellipse at bottom left, rgba(239, 68, 68, 0.02) 0%, var(--bg-surface) 70%); }
+
+.advice-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.advice-header h2 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.advice-text {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.advice-recommendation {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: var(--bg-elevated);
+  border-radius: var(--radius-md);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.text-teal { color: var(--teal-400); }
+.text-blue { color: #38bdf8; }
+.text-purple { color: #c084fc; }
+.text-red { color: #ef4444; }
+
+/* ── Discussion Topics ── */
+.topics-card {
+  flex: 1;
+}
+
+.topics-list-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.topic-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+}
+
+.topic-name {
+  width: 120px;
+  font-weight: 500;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.topic-bar-bg {
+  flex: 1;
+  height: 6px;
+  background: var(--bg-elevated);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.topic-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--teal-500) 0%, var(--blue-500) 100%);
+  border-radius: var(--radius-full);
+  transition: width 0.4s ease-out;
+}
+
+.topic-percent {
+  width: 32px;
+  font-size: 10px;
+  color: var(--text-secondary);
+  text-align: right;
+}
+
+.no-topics-fallback {
+  color: var(--text-muted);
+  font-size: 12px;
+  text-align: center;
+  padding: 20px 0;
+}
