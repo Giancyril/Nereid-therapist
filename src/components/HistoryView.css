@@ -17,21 +17,19 @@
 
 .history-title {
   font-family: var(--font-display);
-  font-size: 1.5rem;
+  font-size: 0.95rem;
   color: var(--tide);
-  margin-bottom: 0.15rem;
+  margin-bottom: 0.1rem;
   line-height: 1.2;
 }
 
 .history-subtitle {
-  font-size: 0.85rem;
+  font-size: 0.72rem;
   color: var(--tide-soft);
 }
 
 .history-page-content {
-  max-width: 1100px;
-  margin: 2rem auto 0;
-  padding: 0 2.5rem;
+  padding: 2rem 2.5rem;
 }
 
 .history-search-wrap {

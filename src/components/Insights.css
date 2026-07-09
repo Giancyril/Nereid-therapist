@@ -19,13 +19,13 @@
 
 .insights-title {
   font-family: var(--font-display);
-  font-size: 1.5rem;
-  margin-bottom: 0.15rem;
+  font-size: 0.95rem;
+  margin-bottom: 0.1rem;
   line-height: 1.2;
 }
 
 .insights-subtitle {
-  font-size: 0.85rem;
+  font-size: 0.72rem;
   color: var(--tide-soft);
 }
 
@@ -42,9 +42,7 @@
 }
 
 .insights-content {
-  max-width: 1180px;
-  margin: 2rem auto 0;
-  padding: 0 2.5rem;
+  padding: 2rem 2.5rem;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
