@@ -21,7 +21,8 @@
   overflow: hidden;
 }
 
-/* Scrollable pages (History, Resources, Insights) */
+/* Scrollable pages (Home, History, Resources, Insights) */
+.main-content .home-container,
 .main-content .history-page-container,
 .main-content .resources-container,
 .main-content .insights-container {

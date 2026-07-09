@@ -4,6 +4,7 @@ import Chat from './components/Chat';
 import HistoryView from './components/HistoryView';
 import Resources from './components/Resources';
 import Insights from './components/Insights';
+import Home from './components/Home';
 import './App.css';
 
 const getInitialChats = () => {
@@ -41,7 +42,7 @@ const getInitialChatId = (chatsList) => {
 
 function App() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [activeTab, setActiveTab] = useState('chat'); // chat, history, resources, insights
+  const [activeTab, setActiveTab] = useState('home'); // home, chat, history, resources, insights
   const [chats, setChats] = useState(getInitialChats);
   const [currentChatId, setCurrentChatId] = useState(() => getInitialChatId(getInitialChats()));
 
@@ -129,6 +130,16 @@ function App() {
   // Render view depending on active tab
   const renderMainContent = () => {
     switch (activeTab) {
+      case 'home':
+        return (
+          <Home
+            onStartChat={() => {
+              handleNewChat();
+              setActiveTab('chat');
+            }}
+            onSelectTab={setActiveTab}
+          />
+        );
       case 'chat':
         return (
           <Chat 
@@ -153,9 +164,12 @@ function App() {
         return <Insights chats={chats} />;
       default:
         return (
-          <Chat 
-            messages={activeChat?.messages} 
-            onUpdateMessages={(msgs) => handleUpdateMessages(currentChatId, msgs)} 
+          <Home
+            onStartChat={() => {
+              handleNewChat();
+              setActiveTab('chat');
+            }}
+            onSelectTab={setActiveTab}
           />
         );
     }
