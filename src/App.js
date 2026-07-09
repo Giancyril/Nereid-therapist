@@ -174,7 +174,9 @@ function App() {
         onDeleteChat={handleDeleteChat}
         onNewChat={handleNewChat}
       />
-      {renderMainContent()}
+      <div className="main-content">
+        {renderMainContent()}
+      </div>
     </div>
   );
 }

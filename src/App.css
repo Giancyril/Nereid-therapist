@@ -1,8 +1,31 @@
-/* ─── App Layout ─────────────────────────────────────────── */
 .app {
   display: flex;
   height: 100vh;
-  width: 100vw;
-  background: var(--bg-base);
+  width: 100%;
+  background: var(--mist);
   overflow: hidden;
+}
+
+.main-content {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Chat fills its container exactly (flex column) */
+.main-content .chat-container {
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Scrollable pages (History, Resources, Insights) */
+.main-content .history-page-container,
+.main-content .resources-container,
+.main-content .insights-container {
+  flex: 1;
+  overflow-y: auto;
+  height: 100%;
 }

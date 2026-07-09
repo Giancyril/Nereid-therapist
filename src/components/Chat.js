@@ -105,50 +105,52 @@ const Chat = ({ messages = [], onUpdateMessages }) => {
 
       {/* ── Messages ── */}
       <div className="chat-messages">
-        {/* Welcome / suggestion chips — shown until first user message */}
-        {showWelcome && (
-          <div className="welcome-state">
-            <div className="welcome-title">Hi, I'm Nereid</div>
-            <div className="welcome-subtitle">
-              A safe, judgment-free space to share what's on your mind. Start a conversation or pick a topic below.
-            </div>
-            <div className="welcome-suggestions">
-              {SUGGESTIONS.map((s) => (
-                <button key={s} className="suggestion-chip" onClick={() => sendMessage(s)}>
-                  {s}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {messages.map((message) => (
-          <div
-            key={message.id}
-            className={`message ${message.sender === 'user' ? 'user-message' : 'nereid-message'}`}
-          >
-            {message.sender === 'nereid' && (
-              <div className="message-avatar"><NereidAvatar /></div>
-            )}
-            <div className="message-content">
-              <div className="message-bubble">{message.text}</div>
-              <div className="message-timestamp">{message.timestamp}</div>
-            </div>
-          </div>
-        ))}
-
-        {isTyping && (
-          <div className="message nereid-message">
-            <div className="message-avatar"><NereidAvatar /></div>
-            <div className="message-content">
-              <div className="message-bubble typing-indicator">
-                <span /><span /><span />
+        <div className="chat-messages-inner">
+          {/* Welcome / suggestion chips — shown until first user message */}
+          {showWelcome && (
+            <div className="welcome-state">
+              <div className="welcome-title">Hi, I'm Nereid</div>
+              <div className="welcome-subtitle">
+                A safe, judgment-free space to share what's on your mind. Start a conversation or pick a topic below.
+              </div>
+              <div className="welcome-suggestions">
+                {SUGGESTIONS.map((s) => (
+                  <button key={s} className="suggestion-chip" onClick={() => sendMessage(s)}>
+                    {s}
+                  </button>
+                ))}
               </div>
             </div>
-          </div>
-        )}
+          )}
 
-        <div ref={messagesEndRef} />
+          {messages.map((message) => (
+            <div
+              key={message.id}
+              className={`message ${message.sender === 'user' ? 'user-message' : 'nereid-message'}`}
+            >
+              {message.sender === 'nereid' && (
+                <div className="message-avatar"><NereidAvatar /></div>
+              )}
+              <div className="message-content">
+                <div className="message-bubble">{message.text}</div>
+                <div className="message-timestamp">{message.timestamp}</div>
+              </div>
+            </div>
+          ))}
+
+          {isTyping && (
+            <div className="message nereid-message">
+              <div className="message-avatar"><NereidAvatar /></div>
+              <div className="message-content">
+                <div className="message-bubble typing-indicator">
+                  <span /><span /><span />
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div ref={messagesEndRef} />
+        </div>
       </div>
 
       {/* ── Footer / Input ── */}
