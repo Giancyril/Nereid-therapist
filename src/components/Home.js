@@ -81,7 +81,6 @@ const Home = ({ onEnterDashboard, onStartChat }) => {
       <nav className="landing-nav">
         <div className="landing-nav-inner">
           <div className="landing-logo">
-            <div className="landing-logo-icon-wrap"><NereidLogo /></div>
             <span className="landing-logo-text">Nereid</span>
           </div>
           <div className="landing-nav-links">
