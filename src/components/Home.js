@@ -8,49 +8,20 @@ import './Home.css';
 /* ── Logo ── */
 const NereidLogo = () => (
   <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="home-logo-icon">
-    <path d="M3 11C7 7 9 13 13 9C17 5 17 11 21 7" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-    <path d="M3 16C7 12 9 18 13 14C17 10 17 16 21 12" stroke="rgba(255,255,255,0.45)" strokeWidth="1.5" strokeLinecap="round"/>
-    <path d="M7 4L7.7 5.7L9.4 6.4L7.7 7.1L7 8.8L6.3 7.1L4.6 6.4L6.3 5.7L7 4Z" fill="#5eead4"/>
-    <circle cx="17" cy="17" r="1.2" fill="#5eead4"/>
+    <path d="M3 11C7 7 9 13 13 9C17 5 17 11 21 7" stroke="white" strokeWidth="2" strokeLinecap="round" />
+    <path d="M3 16C7 12 9 18 13 14C17 10 17 16 21 12" stroke="rgba(255,255,255,0.45)" strokeWidth="1.5" strokeLinecap="round" />
+    <path d="M7 4L7.7 5.7L9.4 6.4L7.7 7.1L7 8.8L6.3 7.1L4.6 6.4L6.3 5.7L7 4Z" fill="#5eead4" />
+    <circle cx="17" cy="17" r="1.2" fill="#5eead4" />
   </svg>
 );
 
 /* ── Companion illustration ── */
 const CompanionIllustration = () => (
-  <svg className="home-illustration" viewBox="0 0 320 360" fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    aria-label="A calm illustrated companion figure seated peacefully, holding a warm cup"
-    role="img">
-    <ellipse cx="160" cy="300" rx="130" ry="40" fill="rgba(63,114,104,0.07)" />
-    <path d="M30 300 Q80 285 130 300 T230 300 T330 300" stroke="rgba(63,114,104,0.15)" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
-    <path d="M20 315 Q70 300 120 315 T220 315 T320 315" stroke="rgba(63,114,104,0.10)" strokeWidth="1.2" fill="none" strokeLinecap="round"/>
-    <ellipse cx="160" cy="248" rx="68" ry="84" fill="#EAF1EE" />
-    <path d="M100 230 Q100 200 160 195 Q220 200 220 230 L225 310 Q160 320 95 310 Z" fill="#3F7268" opacity="0.9" />
-    <path d="M140 195 Q160 208 180 195" stroke="#2C534B" strokeWidth="2" fill="none" strokeLinecap="round"/>
-    <path d="M100 240 Q82 268 90 295" stroke="#C8A98A" strokeWidth="22" strokeLinecap="round" fill="none"/>
-    <path d="M220 240 Q238 268 230 295" stroke="#C8A98A" strokeWidth="22" strokeLinecap="round" fill="none"/>
-    <ellipse cx="92" cy="298" rx="16" ry="12" fill="#C8A98A"/>
-    <ellipse cx="228" cy="298" rx="16" ry="12" fill="#C8A98A"/>
-    <rect x="136" y="278" width="48" height="38" rx="8" fill="#F5EDE0" stroke="#D4B896" strokeWidth="1.5"/>
-    <path d="M184 288 Q196 288 196 300 Q196 312 184 312" stroke="#D4B896" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
-    <path d="M148 276 Q150 268 148 260" stroke="rgba(63,114,104,0.4)" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
-    <path d="M160 274 Q162 264 160 256" stroke="rgba(63,114,104,0.35)" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
-    <path d="M172 276 Q174 268 172 260" stroke="rgba(63,114,104,0.3)" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
-    <rect x="148" y="155" width="24" height="44" rx="12" fill="#C8A98A"/>
-    <ellipse cx="160" cy="135" rx="52" ry="56" fill="#C8A98A"/>
-    <path d="M108 125 Q110 74 160 70 Q210 74 212 125 Q205 108 195 105 Q180 100 160 99 Q140 100 125 105 Q115 108 108 125 Z" fill="#5C3D2E"/>
-    <path d="M108 125 Q104 148 110 168" stroke="#5C3D2E" strokeWidth="14" strokeLinecap="round" fill="none"/>
-    <path d="M212 125 Q216 148 210 168" stroke="#5C3D2E" strokeWidth="14" strokeLinecap="round" fill="none"/>
-    <path d="M138 134 Q144 130 150 134" stroke="#5C3D2E" strokeWidth="2.5" strokeLinecap="round" fill="none"/>
-    <path d="M170 134 Q176 130 182 134" stroke="#5C3D2E" strokeWidth="2.5" strokeLinecap="round" fill="none"/>
-    <path d="M150 152 Q160 160 170 152" stroke="#5C3D2E" strokeWidth="2" strokeLinecap="round" fill="none"/>
-    <ellipse cx="136" cy="148" rx="10" ry="7" fill="#C1614A" opacity="0.22"/>
-    <ellipse cx="184" cy="148" rx="10" ry="7" fill="#C1614A" opacity="0.22"/>
-    <circle cx="64" cy="90" r="3" fill="#3F7268" opacity="0.4"/>
-    <circle cx="256" cy="110" r="2" fill="#3F7268" opacity="0.3"/>
-    <circle cx="244" cy="72" r="4" fill="#C1614A" opacity="0.25"/>
-    <path d="M60 60 L62 54 L64 60 L70 62 L64 64 L62 70 L60 64 L54 62 Z" fill="#3F7268" opacity="0.3"/>
-  </svg>
+  <img
+    src="/hero-illustration.png"
+    alt="A calm illustrated companion seated in a cozy chair, holding a warm cup"
+    className="home-illustration"
+  />
 );
 
 /* ── Approach illustration: two abstract shapes side by side ── */
@@ -60,40 +31,40 @@ const ApproachIllustration = () => (
     {/* Background shapes */}
     <ellipse cx="190" cy="160" rx="170" ry="130" fill="rgba(63,114,104,0.04)" />
     {/* Left shape - chat bubble / listening */}
-    <rect x="30" y="60" width="140" height="100" rx="20" fill="rgba(63,114,104,0.12)" stroke="rgba(63,114,104,0.25)" strokeWidth="1.5"/>
-    <path d="M50 85 L150 85" stroke="rgba(63,114,104,0.4)" strokeWidth="2" strokeLinecap="round"/>
-    <path d="M50 105 L130 105" stroke="rgba(63,114,104,0.3)" strokeWidth="2" strokeLinecap="round"/>
-    <path d="M50 125 L115 125" stroke="rgba(63,114,104,0.2)" strokeWidth="2" strokeLinecap="round"/>
+    <rect x="30" y="60" width="140" height="100" rx="20" fill="rgba(63,114,104,0.12)" stroke="rgba(63,114,104,0.25)" strokeWidth="1.5" />
+    <path d="M50 85 L150 85" stroke="rgba(63,114,104,0.4)" strokeWidth="2" strokeLinecap="round" />
+    <path d="M50 105 L130 105" stroke="rgba(63,114,104,0.3)" strokeWidth="2" strokeLinecap="round" />
+    <path d="M50 125 L115 125" stroke="rgba(63,114,104,0.2)" strokeWidth="2" strokeLinecap="round" />
     {/* Chat tail */}
-    <path d="M60 160 L40 185 L80 160 Z" fill="rgba(63,114,104,0.12)" stroke="rgba(63,114,104,0.25)" strokeWidth="1.5"/>
+    <path d="M60 160 L40 185 L80 160 Z" fill="rgba(63,114,104,0.12)" stroke="rgba(63,114,104,0.25)" strokeWidth="1.5" />
     {/* Right shape - trend / growth */}
-    <rect x="210" y="50" width="140" height="120" rx="20" fill="rgba(44,83,75,0.09)" stroke="rgba(44,83,75,0.2)" strokeWidth="1.5"/>
-    <path d="M230 145 L260 110 L290 125 L330 75" stroke="#3F7268" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
-    <circle cx="260" cy="110" r="4" fill="#3F7268"/>
-    <circle cx="290" cy="125" r="4" fill="#3F7268"/>
-    <circle cx="330" cy="75" r="4" fill="#2C534B"/>
+    <rect x="210" y="50" width="140" height="120" rx="20" fill="rgba(44,83,75,0.09)" stroke="rgba(44,83,75,0.2)" strokeWidth="1.5" />
+    <path d="M230 145 L260 110 L290 125 L330 75" stroke="#3F7268" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+    <circle cx="260" cy="110" r="4" fill="#3F7268" />
+    <circle cx="290" cy="125" r="4" fill="#3F7268" />
+    <circle cx="330" cy="75" r="4" fill="#2C534B" />
     {/* Connecting arc */}
-    <path d="M170 110 Q190 95 210 110" stroke="rgba(63,114,104,0.35)" strokeWidth="2" fill="none" strokeLinecap="round" strokeDasharray="4 4"/>
+    <path d="M170 110 Q190 95 210 110" stroke="rgba(63,114,104,0.35)" strokeWidth="2" fill="none" strokeLinecap="round" strokeDasharray="4 4" />
     {/* Bottom sparkle */}
-    <path d="M190 230 L192 222 L194 230 L202 232 L194 234 L192 242 L190 234 L182 232 Z" fill="rgba(63,114,104,0.4)"/>
-    <circle cx="110" cy="220" r="5" fill="rgba(193,97,74,0.3)"/>
-    <circle cx="280" cy="225" r="4" fill="rgba(63,114,104,0.25)"/>
+    <path d="M190 230 L192 222 L194 230 L202 232 L194 234 L192 242 L190 234 L182 232 Z" fill="rgba(63,114,104,0.4)" />
+    <circle cx="110" cy="220" r="5" fill="rgba(193,97,74,0.3)" />
+    <circle cx="280" cy="225" r="4" fill="rgba(63,114,104,0.25)" />
   </svg>
 );
 
 const features = [
   { icon: <MessageSquare size={22} />, label: 'Talk it out', desc: 'Judgment-free conversations, any time. Nereid listens without interrupting, without judging.' },
-  { icon: <BarChart2 size={22} />,    label: 'Track your journey', desc: 'Revisit reflections and see mood trends over time — a quiet record of how far you\'ve come.' },
-  { icon: <BookOpen size={22} />,     label: 'Find your calm', desc: 'Guided breathing and grounding exercises when things feel like too much.' },
+  { icon: <BarChart2 size={22} />, label: 'Track your journey', desc: 'Revisit reflections and see mood trends over time — a quiet record of how far you\'ve come.' },
+  { icon: <BookOpen size={22} />, label: 'Find your calm', desc: 'Guided breathing and grounding exercises when things feel like too much.' },
 ];
 
 const qualities = [
-  { icon: <Shield size={18} />,    label: 'Private by design', desc: 'Everything stays on your device. No cloud sync, no data sold.' },
-  { icon: <Clock size={18} />,     label: 'Always available', desc: 'Open at 2 AM, during a lunch break, or whenever you need to process.' },
-  { icon: <Zap size={18} />,       label: 'Instant responses', desc: 'No waiting rooms, no appointments. Start a conversation in seconds.' },
-  { icon: <Smile size={18} />,     label: 'Warm & non-clinical', desc: 'Nereid speaks like a compassionate friend, not a medical report.' },
+  { icon: <Shield size={18} />, label: 'Private by design', desc: 'Everything stays on your device. No cloud sync, no data sold.' },
+  { icon: <Clock size={18} />, label: 'Always available', desc: 'Open at 2 AM, during a lunch break, or whenever you need to process.' },
+  { icon: <Zap size={18} />, label: 'Instant responses', desc: 'No waiting rooms, no appointments. Start a conversation in seconds.' },
+  { icon: <Smile size={18} />, label: 'Warm & non-clinical', desc: 'Nereid speaks like a compassionate friend, not a medical report.' },
   { icon: <TrendingUp size={18} />, label: 'Mood insights', desc: 'See patterns in how you\'re feeling across days, weeks, and sessions.' },
-  { icon: <Lock size={18} />,      label: 'No judgment, ever', desc: 'You can say exactly how you feel — nothing is too small or too heavy.' },
+  { icon: <Lock size={18} />, label: 'No judgment, ever', desc: 'You can say exactly how you feel — nothing is too small or too heavy.' },
 ];
 
 const steps = [
