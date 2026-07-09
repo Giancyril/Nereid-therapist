@@ -114,7 +114,6 @@ const JournalView = ({ onSelectTab }) => {
     };
     setActiveEntry(newEntry);
     setEditorText('');
-    setSelectedPrompt(promptText);
     setSaveStatus('');
   };
 

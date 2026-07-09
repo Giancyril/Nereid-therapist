@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import { Shield, AlertTriangle, Heart, MessageSquare, Volume2, VolumeX, Settings } from 'lucide-react';
+import { Volume2, VolumeX, Settings } from 'lucide-react';
 import MessageInput from './MessageInput';
 import SafetyPlanDrawer from './SafetyPlanDrawer';
 import CrisisResourceCard from './CrisisResourceCard';

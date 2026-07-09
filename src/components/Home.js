@@ -1,19 +1,9 @@
 import React from 'react';
 import {
-  MessageSquare, BarChart2, BookOpen, ArrowRight, Heart,
+  MessageSquare, BarChart2, BookOpen, ArrowRight,
   Shield, Zap, Clock, Lock, Smile, TrendingUp, CheckCircle
 } from 'lucide-react';
 import './Home.css';
-
-/* ── Logo ── */
-const NereidLogo = () => (
-  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="home-logo-icon">
-    <path d="M3 11C7 7 9 13 13 9C17 5 17 11 21 7" stroke="white" strokeWidth="2" strokeLinecap="round" />
-    <path d="M3 16C7 12 9 18 13 14C17 10 17 16 21 12" stroke="rgba(255,255,255,0.45)" strokeWidth="1.5" strokeLinecap="round" />
-    <path d="M7 4L7.7 5.7L9.4 6.4L7.7 7.1L7 8.8L6.3 7.1L4.6 6.4L6.3 5.7L7 4Z" fill="#5eead4" />
-    <circle cx="17" cy="17" r="1.2" fill="#5eead4" />
-  </svg>
-);
 
 /* ── Companion illustration ── */
 const CompanionIllustration = () => (

@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { TrendingUp, BarChart2, Smile, AlertTriangle, Calendar, Heart, Info, BookOpen, MessageSquare } from 'lucide-react';
+import { TrendingUp, BarChart2, Smile, AlertTriangle, Heart, Info, BookOpen, MessageSquare } from 'lucide-react';
 import { getJournalEntries } from '../utils/journalStorage';
 import './Insights.css';
 
