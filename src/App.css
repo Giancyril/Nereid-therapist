@@ -6,6 +6,13 @@
   overflow: hidden;
 }
 
+/* Full-screen landing view — no sidebar, independent scroll */
+.app-landing {
+  width: 100%;
+  min-height: 100vh;
+  overflow-y: auto;
+}
+
 .main-content {
   flex: 1;
   min-width: 0;
@@ -21,8 +28,7 @@
   overflow: hidden;
 }
 
-/* Scrollable pages (Home, History, Resources, Insights) */
-.main-content .home-container,
+/* Scrollable pages (History, Resources, Insights) */
 .main-content .history-page-container,
 .main-content .resources-container,
 .main-content .insights-container {

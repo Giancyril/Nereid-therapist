@@ -41,8 +41,10 @@ const getInitialChatId = (chatsList) => {
 };
 
 function App() {
+  // 'landing' = full-page home (no sidebar), 'dashboard' = sidebar + content
+  const [view, setView] = useState('landing');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [activeTab, setActiveTab] = useState('home'); // home, chat, history, resources, insights
+  const [activeTab, setActiveTab] = useState('chat'); // chat, history, resources, insights
   const [chats, setChats] = useState(getInitialChats);
   const [currentChatId, setCurrentChatId] = useState(() => getInitialChatId(getInitialChats()));
 
@@ -56,10 +58,9 @@ function App() {
   }, [currentChatId]);
 
   const handleUpdateMessages = (chatId, nextMessages) => {
-    setChats(prevChats => 
+    setChats(prevChats =>
       prevChats.map(c => {
         if (c.id === chatId) {
-          // If title is generic and a user message is sent, generate a topic title
           let updatedTitle = c.title;
           if (c.title === 'New Reflection' || c.title === 'Warm Welcome') {
             const firstUserMsg = nextMessages.find(m => m.sender === 'user');
@@ -68,11 +69,7 @@ function App() {
               updatedTitle = text.length > 25 ? text.substring(0, 22) + '...' : text;
             }
           }
-          return {
-            ...c,
-            title: updatedTitle,
-            messages: nextMessages
-          };
+          return { ...c, title: updatedTitle, messages: nextMessages };
         }
         return c;
       })
@@ -96,6 +93,7 @@ function App() {
     setChats(prev => [newChat, ...prev]);
     setCurrentChatId(newId);
     setActiveTab('chat');
+    setView('dashboard');
   };
 
   const handleDeleteChat = (chatId) => {
@@ -124,38 +122,49 @@ function App() {
     });
   };
 
+  // Enter dashboard (preserves current tab, defaults to 'chat')
+  const handleEnterDashboard = () => {
+    setView('dashboard');
+  };
+
   // Find active chat object
   const activeChat = chats.find(c => c.id === currentChatId) || chats[0];
 
-  // Render view depending on active tab
+  // ── LANDING VIEW (no sidebar) ──────────────────────────────────────────
+  if (view === 'landing') {
+    return (
+      <div className="app-landing">
+        <Home
+          onEnterDashboard={handleEnterDashboard}
+          onStartChat={handleNewChat}
+          onSelectTab={(tab) => {
+            setActiveTab(tab);
+            setView('dashboard');
+          }}
+        />
+      </div>
+    );
+  }
+
+  // ── DASHBOARD VIEW (sidebar + content) ────────────────────────────────
   const renderMainContent = () => {
     switch (activeTab) {
-      case 'home':
-        return (
-          <Home
-            onStartChat={() => {
-              handleNewChat();
-              setActiveTab('chat');
-            }}
-            onSelectTab={setActiveTab}
-          />
-        );
       case 'chat':
         return (
-          <Chat 
-            messages={activeChat?.messages} 
-            onUpdateMessages={(msgs) => handleUpdateMessages(currentChatId, msgs)} 
+          <Chat
+            messages={activeChat?.messages}
+            onUpdateMessages={(msgs) => handleUpdateMessages(currentChatId, msgs)}
           />
         );
       case 'history':
         return (
-          <HistoryView 
-            chats={chats} 
+          <HistoryView
+            chats={chats}
             onSelectChat={(id) => {
               setCurrentChatId(id);
               setActiveTab('chat');
-            }} 
-            onDeleteChat={handleDeleteChat} 
+            }}
+            onDeleteChat={handleDeleteChat}
           />
         );
       case 'resources':
@@ -164,12 +173,9 @@ function App() {
         return <Insights chats={chats} />;
       default:
         return (
-          <Home
-            onStartChat={() => {
-              handleNewChat();
-              setActiveTab('chat');
-            }}
-            onSelectTab={setActiveTab}
+          <Chat
+            messages={activeChat?.messages}
+            onUpdateMessages={(msgs) => handleUpdateMessages(currentChatId, msgs)}
           />
         );
     }
@@ -177,8 +183,8 @@ function App() {
 
   return (
     <div className="app">
-      <Sidebar 
-        collapsed={sidebarCollapsed} 
+      <Sidebar
+        collapsed={sidebarCollapsed}
         onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
         activeTab={activeTab}
         onSelectTab={setActiveTab}
