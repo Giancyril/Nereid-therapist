@@ -16,6 +16,7 @@ A production-grade, AI-powered mental wellness companion designed for emotionall
 - **Mood & Insights Analytics**: The Insights tab renders live emotional analysis derived from accumulated chat history — including a custom animated SVG Bézier line chart tracking distress trends over the last 10 messages, horizontal topic bar charts, mood distribution progress bars, and a personalized actionable wellbeing advice card.
 - **Reflection History Dashboard**: The History tab displays a searchable grid of all past chat sessions as styled cards — including last message preview, auto-detected mood tag pills, and a one-click resume button that instantly switches the active chat session.
 - **Crisis & Self-Help Resources**: The Resources tab provides a searchable library of evidence-based self-care exercises (5-4-3-2-1 grounding, sleep hygiene, journaling prompts), alongside prominently displayed emergency crisis hotlines (988 Lifeline, Crisis Text Line, international helpline locator).
+- **Standalone Landing Page**: A fully separated, full-screen introductory home page (no sidebar) featuring a modern hero illustration, deep product narrative ("About Nereid"), our "reflective listening" philosophy, a qualities grid, a 3-step quick start guide, and an overlay Call-to-Action banner leading seamlessly into the main app dashboard.
 - **Keyword Sentiment Fallback**: A zero-dependency, latency-free local classifier handles emotional routing when the Ollama model is offline or slow — detecting crisis language, high distress, moderate anxiety, sadness, sleep issues, and professional help-seeking patterns via keyword heuristics.
 - **Collapsible Sidebar**: Smooth `cubic-bezier` animated sidebar with icon-only collapsed mode. Includes a recent chats list with hover-reveal delete controls, active session highlighting, and full Lucide React icon integration.
 
@@ -87,6 +88,8 @@ graph TD
 nereid-therapist/
 ├── src/                            # React frontend source
 │   ├── components/
+│   │   ├── Home.js                 # Standalone landing page (hero, about, approach)
+│   │   ├── Home.css
 │   │   ├── Sidebar.js              # Collapsible nav with Lucide icons & recent chats
 │   │   ├── Sidebar.css
 │   │   ├── Chat.js                 # Multi-turn chat interface
@@ -105,7 +108,8 @@ nereid-therapist/
 │   └── index.css                   # Global design tokens & dark theme variables
 │
 ├── public/
-│   └── index.html
+│   ├── index.html
+│   └── hero-illustration.png       # Generated custom vector hero illustration
 │
 ├── api_server.py                   # FastAPI backend + emotional classifier
 ├── ml.py                           # Terminal-mode Nereid CLI with dual-layer routing
