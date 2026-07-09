@@ -3,7 +3,7 @@ FastAPI server for Nereid AI Chat Interface
 Connects React frontend to Ollama AI backend
 """
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List, Dict, Optional
@@ -61,11 +61,32 @@ class ChatMessage(BaseModel):
 class ChatRequest(BaseModel):
     message: str
     conversation_history: Optional[List[ChatMessage]] = []
+    style: Optional[str] = "reflective"
+    profile_context: Optional[str] = ""
 
 class ChatResponse(BaseModel):
     reply: str
     success: bool = True
     analysis: Optional[dict] = None
+
+class JournalAnalyzeRequest(BaseModel):
+    text: str
+
+class JournalAnalyzeResponse(BaseModel):
+    success: bool = True
+    analysis: Optional[dict] = None
+
+class ProfileUpdate(BaseModel):
+    new_stressors: List[str] = []
+    new_coping_worked: List[str] = []
+    new_coping_didnt_work: List[str] = []
+    new_context: List[str] = []
+    reinforced_existing_ids: List[str] = []
+
+class SummarizeRequest(BaseModel):
+    session_id: str
+    messages: List[ChatMessage]
+    current_profile: Optional[dict] = None
 
 ROUTER_PROMPT = """Classify the user's emotional state and support needs into one of:
 crisis, high_distress, moderate_distress, seeking_therapist, general_support, 
@@ -172,10 +193,35 @@ def route_sentiment(user_text: str) -> dict:
         print(f"Ollama routing failed: {e}. Using local keyword fallback.")
         return local_fallback_route(user_text)
 
-def get_nereid_reply(conversation_history: List[Dict], user_text: str) -> str:
+STYLE_PROMPTS = {
+    "reflective": """
+[STYLE: Reflective Listening]
+- Mirror and validate the user's feelings.
+- Ask gentle, open-ended questions.
+- Avoid offering direct solutions, advice, or fixing their problems unless explicitly asked.
+""",
+    "cbt": """
+[STYLE: CBT-style Reframing]
+- Gently identify cognitive distortions (like all-or-nothing thinking, catastrophizing).
+- Offer alternative, balanced reframes for their thoughts.
+- Ask questions to examine evidence for and against their distressing thoughts.
+""",
+    "venting": """
+[STYLE: Venting / No Advice]
+- Do NOT suggest solutions, advice, coping strategies, or reframes.
+- Acknowledge their venting, validate their frustration/pain, and show you are fully present and listening.
+- Keep responses focused on presence and supportive validation.
+"""
+}
+
+def get_nereid_reply(conversation_history: List[Dict], user_text: str, style: str = "reflective", profile_context: str = "") -> str:
     """Get Nereid's reply using Ollama."""
+    style_fragment = STYLE_PROMPTS.get(style, STYLE_PROMPTS["reflective"])
+    combined_system = SYSTEM + "\n" + style_fragment
+    if profile_context and profile_context.strip():
+        combined_system += "\n" + profile_context
     messages = [
-        {"role": "system", "content": SYSTEM},
+        {"role": "system", "content": combined_system},
     ]
     
     # Add conversation history
@@ -214,6 +260,28 @@ def root():
 def health():
     return {"status": "healthy"}
 
+@app.get("/api/styles")
+def get_styles():
+    return [
+        {"id": "reflective", "name": "Reflective Listening", "description": "Mirrors and validates your feelings, asking gentle questions. Avoids giving solutions unless asked."},
+        {"id": "cbt", "name": "CBT Reframing", "description": "Gently explores cognitive distortions, offering balanced reframes and examining evidence."},
+        {"id": "venting", "name": "Venting / No Advice", "description": "A quiet, supportive listening ear. Strictly avoids suggesting coping strategies or reframes unless prompted."}
+    ]
+@app.post("/api/journal/analyze", response_model=JournalAnalyzeResponse)
+async def analyze_journal(request: JournalAnalyzeRequest):
+    """
+    Endpoint for analyzing a journal entry's sentiment and urgency
+    """
+    if not request.text or not request.text.strip():
+        raise HTTPException(status_code=400, detail="Journal entry text cannot be empty")
+    
+    try:
+        analysis = route_sentiment(request.text.strip())
+        return JournalAnalyzeResponse(success=True, analysis=analysis)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error analyzing journal entry: {str(e)}")
+
+
 @app.post("/api/chat", response_model=ChatResponse)
 async def chat(request: ChatRequest):
     """
@@ -232,7 +300,12 @@ async def chat(request: ChatRequest):
                 else:
                     history.append({"role": msg.role, "content": msg.content})
         
-        reply = get_nereid_reply(history, request.message.strip())
+        reply = get_nereid_reply(
+            history,
+            request.message.strip(),
+            request.style or "reflective",
+            request.profile_context or ""
+        )
         
         # Analyze the user's emotional state
         analysis = route_sentiment(request.message.strip())
@@ -245,6 +318,80 @@ async def chat(request: ChatRequest):
         error_detail = f"Internal server error: {str(e)}\n{traceback.format_exc()}"
         print(f"ERROR: {error_detail}")  # Log to console
         raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
+@app.post("/api/sessions/{session_id}/summarize")
+async def summarize_session(session_id: str, request: SummarizeRequest, background_tasks: BackgroundTasks):
+    """
+    Triggered when a chat session ends. Runs summarization in the background
+    so it doesn't block the UI. Returns immediately with a 202 Accepted.
+    """
+    background_tasks.add_task(_run_summarization, session_id, request.messages, request.current_profile or {})
+    return {"accepted": True, "session_id": session_id}
+
+def _run_summarization(session_id: str, messages: List[ChatMessage], current_profile: dict):
+    """
+    Background task: prompt the LLM to return a structured ProfileUpdate diff
+    based on this session's messages and the existing profile.
+    """
+    try:
+        conversation_text = "\n".join(
+            f"{msg.role.upper()}: {msg.content}" for msg in messages if hasattr(msg, 'role')
+        )
+        profile_summary = ""
+        if current_profile:
+            stressors = [i.get('text', '') for i in current_profile.get('recurringStressors', [])[:5]]
+            if stressors:
+                profile_summary = f"Existing known stressors: {', '.join(stressors)}"
+
+        prompt = f"""You are analyzing a therapy support conversation to extract structured insights.
+
+Conversation transcript:
+{conversation_text}
+
+{profile_summary}
+
+Extract insights as a JSON object with exactly these keys:
+- new_stressors: list of new recurring stressors mentioned (short phrases, max 5)
+- new_coping_worked: list of coping strategies that the user said worked or seemed helpful (short phrases, max 3)
+- new_coping_didnt_work: list of coping strategies that didn't help (short phrases, max 3)
+- new_context: list of ongoing contextual situations worth remembering (short phrases, max 3)
+- reinforced_existing_ids: always an empty list []
+
+Return ONLY valid JSON, nothing else."""
+
+        response = ollama.chat(
+            model=MODEL,
+            messages=[{"role": "user", "content": prompt}],
+            options={"temperature": 0.1},
+        )
+        raw = response["message"]["content"]
+
+        # Extract JSON from response
+        start = raw.find('{')
+        end = raw.rfind('}') + 1
+        if start != -1 and end > start:
+            diff = json.loads(raw[start:end])
+            diff["sessionId"] = session_id
+            print(f"[SUMMARIZE] Session {session_id} → diff: {diff}")
+            # The diff is returned via polling from the client (stored in memory cache)
+            # For simplicity, log it — the client can call GET /api/sessions/{id}/profile-diff
+            _profile_diff_cache[session_id] = diff
+    except Exception as e:
+        print(f"[SUMMARIZE ERROR] Session {session_id}: {e}")
+
+# Simple in-memory cache for profile diffs (cleared on server restart)
+_profile_diff_cache = {}
+
+@app.get("/api/sessions/{session_id}/profile-diff")
+def get_profile_diff(session_id: str):
+    """
+    Client polls this after calling /summarize. Returns the diff if ready,
+    or 204 No Content if still processing.
+    """
+    diff = _profile_diff_cache.pop(session_id, None)
+    if diff is None:
+        return {"ready": False}
+    return {"ready": True, "diff": diff}
+
 
 if __name__ == "__main__":
     import uvicorn

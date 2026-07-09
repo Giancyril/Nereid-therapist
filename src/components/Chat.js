@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import { Shield, AlertTriangle, Heart, MessageSquare } from 'lucide-react';
+import { Shield, AlertTriangle, Heart, MessageSquare, Volume2, VolumeX, Settings } from 'lucide-react';
 import MessageInput from './MessageInput';
 import SafetyPlanDrawer from './SafetyPlanDrawer';
+import CrisisResourceCard from './CrisisResourceCard';
 import { getSafetyPlan, logEscalationEvent, dismissLastEscalationEvent } from '../utils/safetyStorage';
+import { getUserProfile, buildProfileContext, mergeProfileDiff } from '../utils/profileStorage';
 import './Chat.css';
 
 /* ── Nereid wave SVG logo ── */
@@ -23,13 +25,73 @@ const SUGGESTIONS = [
   "Tips for better sleep & wellbeing",
 ];
 
+const STYLE_OPTIONS = [
+  { id: 'reflective', label: 'Reflective', emoji: '🌱', desc: 'Validates & listens without advising' },
+  { id: 'cbt', label: 'CBT Reframing', emoji: '🔍', desc: 'Gently reframes cognitive distortions' },
+  { id: 'venting', label: 'Venting', emoji: '💨', desc: 'A quiet, non-advising sounding board' }
+];
+
 const Chat = ({ chatId = 'default', messages = [], onUpdateMessages, onSelectTab }) => {
   const [isTyping, setIsTyping] = useState(false);
   const [safetyPlanDrawerOpen, setSafetyPlanDrawerOpen] = useState(false);
+  const [selectedStyle, setSelectedStyle] = useState(() => {
+    return localStorage.getItem('nereid_preferred_style') || 'reflective';
+  });
+  const [showStyleOnboarding, setShowStyleOnboarding] = useState(() => {
+    return !localStorage.getItem('nereid_style_onboarding_seen');
+  });
+
+  // ── Voice Output (TTS) state ──
+  const [ttsEnabled, setTtsEnabled] = useState(() => {
+    return localStorage.getItem('nereid_tts_enabled') === 'true';
+  });
+  const [ttsSettingsOpen, setTtsSettingsOpen] = useState(false);
+  const [ttsRate, setTtsRate] = useState(() => {
+    return parseFloat(localStorage.getItem('nereid_tts_rate') || '1.0');
+  });
+  const [ttsVoiceName, setTtsVoiceName] = useState(() => {
+    return localStorage.getItem('nereid_tts_voice') || '';
+  });
+  const [ttsVoices, setTtsVoices] = useState([]);
+  const lastSpokenMsgIdRef = useRef(null);
   
   const messagesEndRef = useRef(null);
   const messagesRef = useRef(messages);
   const nudgeTimerRef = useRef(null);
+
+  // Load TTS voices (they load asynchronously on some browsers)
+  useEffect(() => {
+    const loadVoices = () => {
+      const v = window.speechSynthesis?.getVoices() || [];
+      setTtsVoices(v);
+    };
+    loadVoices();
+    window.speechSynthesis?.addEventListener('voiceschanged', loadVoices);
+    return () => window.speechSynthesis?.removeEventListener('voiceschanged', loadVoices);
+  }, []);
+
+  // Speak latest Nereid message when TTS is enabled
+  useEffect(() => {
+    if (!ttsEnabled || !window.speechSynthesis) return;
+    const nereidMsgs = messages.filter(m => m.sender === 'nereid' && m.text && m.type !== 'crisis-card');
+    if (nereidMsgs.length === 0) return;
+    const lastMsg = nereidMsgs[nereidMsgs.length - 1];
+    if (lastMsg.id === lastSpokenMsgIdRef.current) return;
+    lastSpokenMsgIdRef.current = lastMsg.id;
+    const utter = new SpeechSynthesisUtterance(lastMsg.text);
+    utter.rate = ttsRate;
+    if (ttsVoiceName) {
+      const matchedVoice = ttsVoices.find(v => v.name === ttsVoiceName);
+      if (matchedVoice) utter.voice = matchedVoice;
+    }
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(utter);
+  }, [messages, ttsEnabled, ttsRate, ttsVoiceName, ttsVoices]);
+
+  // Stop speech on unmount
+  useEffect(() => {
+    return () => window.speechSynthesis?.cancel();
+  }, []);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -48,6 +110,36 @@ const Chat = ({ chatId = 'default', messages = [], onUpdateMessages, onSelectTab
       }
     };
   }, []);
+
+  // Summarize session and update profile on tab/window close
+  useEffect(() => {
+    const triggerSummarize = () => {
+      const profile = getUserProfile();
+      const historyForApi = messagesRef.current
+        .filter(m => m.sender && m.text && m.type !== 'crisis-card')
+        .map(m => ({ role: m.sender === 'user' ? 'user' : 'assistant', content: m.text }));
+      if (historyForApi.length < 4) return; // skip trivially short sessions
+      // Use sendBeacon for fire-and-forget on close
+      const payload = JSON.stringify({ session_id: chatId, messages: historyForApi, current_profile: profile });
+      navigator.sendBeacon(`http://localhost:8000/api/sessions/${chatId}/summarize`, new Blob([payload], { type: 'application/json' }));
+    };
+    window.addEventListener('beforeunload', triggerSummarize);
+    return () => window.removeEventListener('beforeunload', triggerSummarize);
+  }, [chatId]);
+
+  // Poll for profile diff after a short delay when component mounts
+  useEffect(() => {
+    const pollDiff = async () => {
+      try {
+        const res = await axios.get(`http://localhost:8000/api/sessions/${chatId}/profile-diff`);
+        if (res.data?.ready && res.data?.diff) {
+          mergeProfileDiff(res.data.diff);
+        }
+      } catch (e) { /* silently ignore */ }
+    };
+    const timer = setTimeout(pollDiff, 3000);
+    return () => clearTimeout(timer);
+  }, [chatId]);
 
   const clearNudgeTimer = () => {
     if (nudgeTimerRef.current) {
@@ -92,8 +184,11 @@ const Chat = ({ chatId = 'default', messages = [], onUpdateMessages, onSelectTab
     setIsTyping(true);
 
     try {
+      const profileContext = buildProfileContext(getUserProfile());
       const response = await axios.post('http://localhost:8000/api/chat', {
         message: text.trim(),
+        style: selectedStyle,
+        profile_context: profileContext,
         conversation_history: messages.slice(1).map(msg => ({
           role: msg.sender === 'user' ? 'user' : 'assistant',
           content: msg.text,
@@ -213,42 +308,10 @@ const Chat = ({ chatId = 'default', messages = [], onUpdateMessages, onSelectTab
                 <div key={message.id} className="message nereid-message crisis-card-wrapper">
                   <div className="message-avatar"><NereidAvatar /></div>
                   <div className="message-content">
-                    <div className="crisis-resource-card">
-                      <div className="crisis-card-header">
-                        <AlertTriangle className="crisis-warn-icon" size={18} />
-                        <h4>It sounds like things are heavy right now.</h4>
-                      </div>
-                      <p className="crisis-card-intro">
-                        Please know that you're not alone. Here is verified support if you'd like to reach out:
-                      </p>
-                      
-                      <div className="crisis-contacts-grid">
-                        <div className="crisis-contact-box">
-                          <a href="tel:988" className="crisis-call-link">Call 988 (Lifeline)</a>
-                          <span className="crisis-desc">Free, confidential, 24/7 support line</span>
-                        </div>
-                        <div className="crisis-contact-box">
-                          <a href="sms:741741?&body=HOME" className="crisis-call-link">Text HOME to 741741</a>
-                          <span className="crisis-desc">Connect with Crisis Text Line</span>
-                        </div>
-                      </div>
-
-                      <div className="crisis-card-footer">
-                        <button 
-                          className="view-plan-btn"
-                          onClick={() => setSafetyPlanDrawerOpen(true)}
-                        >
-                          <Shield size={14} />
-                          <span>View My Safety Plan</span>
-                        </button>
-                        <button 
-                          className="dismiss-crisis-btn"
-                          onClick={() => handleDismissCrisisCard(message.id)}
-                        >
-                          I'm safe / Dismiss
-                        </button>
-                      </div>
-                    </div>
+                    <CrisisResourceCard 
+                      onOpenSafetyPlan={() => setSafetyPlanDrawerOpen(true)}
+                      onDismiss={() => handleDismissCrisisCard(message.id)}
+                    />
                     <div className="message-timestamp">{message.timestamp}</div>
                   </div>
                 </div>
@@ -310,6 +373,121 @@ const Chat = ({ chatId = 'default', messages = [], onUpdateMessages, onSelectTab
 
       {/* ── Footer / Input ── */}
       <div className="chat-footer">
+        {/* Style Selector */}
+        <div className="style-selector-container">
+          <span className="style-selector-label">Listening style:</span>
+          <div className="style-pills">
+            {STYLE_OPTIONS.map(opt => (
+              <button
+                key={opt.id}
+                className={`style-pill ${selectedStyle === opt.id ? 'active' : ''}`}
+                onClick={() => {
+                  setSelectedStyle(opt.id);
+                  localStorage.setItem('nereid_preferred_style', opt.id);
+                }}
+                title={opt.desc}
+              >
+                <span className="style-emoji">{opt.emoji}</span>
+                <span className="style-pill-label">{opt.label}</span>
+              </button>
+            ))}
+          </div>
+
+          {/* TTS Toggle */}
+          <div className="tts-controls">
+            <button
+              className={`tts-toggle-btn ${ttsEnabled ? 'active' : ''}`}
+              title={ttsEnabled ? 'Read aloud is ON — click to disable' : 'Click to read replies aloud'}
+              onClick={() => {
+                const next = !ttsEnabled;
+                setTtsEnabled(next);
+                localStorage.setItem('nereid_tts_enabled', String(next));
+                if (!next) window.speechSynthesis?.cancel();
+              }}
+            >
+              {ttsEnabled ? <Volume2 size={15} /> : <VolumeX size={15} />}
+            </button>
+            <button
+              className={`tts-settings-btn ${ttsSettingsOpen ? 'active' : ''}`}
+              title="Voice output settings"
+              onClick={() => setTtsSettingsOpen(prev => !prev)}
+            >
+              <Settings size={14} />
+            </button>
+          </div>
+
+          {/* TTS Settings Popover */}
+          {ttsSettingsOpen && (
+            <div className="tts-settings-popover">
+              <div className="tts-setting-row">
+                <label className="tts-label">Read replies aloud</label>
+                <button
+                  className={`tts-toggle-chip ${ttsEnabled ? 'on' : 'off'}`}
+                  onClick={() => {
+                    const next = !ttsEnabled;
+                    setTtsEnabled(next);
+                    localStorage.setItem('nereid_tts_enabled', String(next));
+                    if (!next) window.speechSynthesis?.cancel();
+                  }}
+                >
+                  {ttsEnabled ? 'On' : 'Off'}
+                </button>
+              </div>
+              <div className="tts-setting-row">
+                <label className="tts-label">Speed: {ttsRate.toFixed(1)}×</label>
+                <input
+                  type="range"
+                  min="0.6"
+                  max="1.5"
+                  step="0.1"
+                  value={ttsRate}
+                  className="tts-rate-slider"
+                  onChange={e => {
+                    const v = parseFloat(e.target.value);
+                    setTtsRate(v);
+                    localStorage.setItem('nereid_tts_rate', String(v));
+                  }}
+                />
+              </div>
+              {ttsVoices.length > 0 && (
+                <div className="tts-setting-row column">
+                  <label className="tts-label">Voice</label>
+                  <select
+                    className="tts-voice-select"
+                    value={ttsVoiceName}
+                    onChange={e => {
+                      setTtsVoiceName(e.target.value);
+                      localStorage.setItem('nereid_tts_voice', e.target.value);
+                    }}
+                  >
+                    <option value="">System Default</option>
+                    {ttsVoices.map(v => (
+                      <option key={v.name} value={v.name}>{v.name} ({v.lang})</option>
+                    ))}
+                  </select>
+                </div>
+              )}
+            </div>
+          )}
+
+          {showStyleOnboarding && (
+            <div className="style-onboarding-tooltip">
+              <div className="tooltip-content">
+                <strong>Choose how Nereid listens:</strong> 🌱 Reflective listens, 🔍 CBT reframes, 💨 Venting just hears you out.
+              </div>
+              <button 
+                className="tooltip-close" 
+                onClick={() => {
+                  setShowStyleOnboarding(false);
+                  localStorage.setItem('nereid_style_onboarding_seen', 'true');
+                }}
+              >
+                Got it
+              </button>
+            </div>
+          )}
+        </div>
+
         <MessageInput onSend={sendMessage} />
         <div className="footer-disclaimer">
           Nereid is an AI and can make mistakes. For emergencies, please contact a professional.
