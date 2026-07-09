@@ -1,5 +1,5 @@
 import React from 'react';
-import { MessageSquare, History, BookOpen, BarChart2, ChevronLeft, ChevronRight, Plus, Trash2 } from 'lucide-react';
+import { MessageSquare, History, BookOpen, BarChart2, ChevronLeft, ChevronRight, Plus, Trash2, Shield } from 'lucide-react';
 import './Sidebar.css';
 
 const NereidIcon = () => (
@@ -42,6 +42,7 @@ const Sidebar = ({
   const navItems = [
     { id: 'chat',        label: 'Chat',        icon: <MessageSquare size={16} /> },
     { id: 'history',     label: 'History',     icon: <History size={16} /> },
+    { id: 'safety-plan', label: 'Safety Plan', icon: <Shield size={16} /> },
     { id: 'resources',   label: 'Resources',   icon: <BookOpen size={16} /> },
     { id: 'insights',    label: 'Insights',    icon: <BarChart2 size={16} /> },
   ];

@@ -106,7 +106,7 @@ const Home = ({ onEnterDashboard, onStartChat }) => {
             </h1>
             <p className="hero-subhead">
               Nereid listens without judgment, remembers your journey,
-              and helps you find steadier ground — any time of day.
+              and helps you find steadier ground any time of day.
             </p>
             <div className="hero-actions">
               <button className="btn-primary-lg" onClick={onStartChat} id="landing-start-talking-btn">

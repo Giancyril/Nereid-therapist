@@ -5,6 +5,8 @@ import HistoryView from './components/HistoryView';
 import Resources from './components/Resources';
 import Insights from './components/Insights';
 import Home from './components/Home';
+import SafetyPlanView from './components/SafetyPlanView';
+import { getSafetyPlan, getEscalationEvents, saveEscalationEvents } from './utils/safetyStorage';
 import './App.css';
 
 const getInitialChats = () => {
@@ -56,6 +58,64 @@ function App() {
   useEffect(() => {
     localStorage.setItem('nereid_current_chat_id', currentChatId);
   }, [currentChatId]);
+
+  // Foreground check for safety plan check-in nudges
+  useEffect(() => {
+    const handleForegroundCheck = () => {
+      const plan = getSafetyPlan();
+      if (!plan.checkInSettings?.enabled) return;
+
+      const thresholdMs = plan.checkInSettings.quietThresholdMinutes * 60 * 1000;
+      const now = Date.now();
+      const events = getEscalationEvents();
+      let updated = false;
+
+      const nextEvents = events.map(event => {
+        if (!event.checkInSent && !event.userDismissed && (now - event.triggeredAt) >= thresholdMs) {
+          setChats(prevChats => {
+            const chatToUpdate = prevChats.find(c => c.id === event.sessionId);
+            if (chatToUpdate) {
+              const alreadyHasNudge = chatToUpdate.messages?.some(m => m.type === 'nudge-card');
+              if (!alreadyHasNudge) {
+                const nudgeMsg = {
+                  id: Date.now(),
+                  sender: 'nereid',
+                  type: 'nudge-card',
+                  text: plan.checkInSettings.message || "Still there? No pressure to respond.",
+                  timestamp: new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }),
+                };
+                return prevChats.map(c => {
+                  if (c.id === event.sessionId) {
+                    return {
+                      ...c,
+                      messages: [...(c.messages || []), nudgeMsg]
+                    };
+                  }
+                  return c;
+                });
+              }
+            }
+            return prevChats;
+          });
+
+          updated = true;
+          return { ...event, checkInSent: true };
+        }
+        return event;
+      });
+
+      if (updated) {
+        saveEscalationEvents(nextEvents);
+      }
+    };
+
+    handleForegroundCheck();
+
+    window.addEventListener('focus', handleForegroundCheck);
+    return () => {
+      window.removeEventListener('focus', handleForegroundCheck);
+    };
+  }, []);
 
   const handleUpdateMessages = (chatId, nextMessages) => {
     setChats(prevChats =>
@@ -152,8 +212,10 @@ function App() {
       case 'chat':
         return (
           <Chat
+            chatId={currentChatId}
             messages={activeChat?.messages}
             onUpdateMessages={(msgs) => handleUpdateMessages(currentChatId, msgs)}
+            onSelectTab={setActiveTab}
           />
         );
       case 'history':
@@ -169,6 +231,8 @@ function App() {
         );
       case 'resources':
         return <Resources />;
+      case 'safety-plan':
+        return <SafetyPlanView />;
       case 'insights':
         return <Insights chats={chats} />;
       default:

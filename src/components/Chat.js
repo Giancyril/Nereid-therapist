@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
+import { Shield, AlertTriangle, Heart, MessageSquare } from 'lucide-react';
 import MessageInput from './MessageInput';
+import SafetyPlanDrawer from './SafetyPlanDrawer';
+import { getSafetyPlan, logEscalationEvent, dismissLastEscalationEvent } from '../utils/safetyStorage';
 import './Chat.css';
 
 /* ── Nereid wave SVG logo ── */
@@ -20,18 +23,62 @@ const SUGGESTIONS = [
   "Tips for better sleep & wellbeing",
 ];
 
-const Chat = ({ messages = [], onUpdateMessages }) => {
+const Chat = ({ chatId = 'default', messages = [], onUpdateMessages, onSelectTab }) => {
   const [isTyping, setIsTyping] = useState(false);
+  const [safetyPlanDrawerOpen, setSafetyPlanDrawerOpen] = useState(false);
+  
   const messagesEndRef = useRef(null);
+  const messagesRef = useRef(messages);
+  const nudgeTimerRef = useRef(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  useEffect(() => { scrollToBottom(); }, [messages]);
+  useEffect(() => {
+    messagesRef.current = messages;
+    scrollToBottom();
+  }, [messages]);
+
+  // Clean up timer on unmount
+  useEffect(() => {
+    return () => {
+      if (nudgeTimerRef.current) {
+        clearTimeout(nudgeTimerRef.current);
+      }
+    };
+  }, []);
+
+  const clearNudgeTimer = () => {
+    if (nudgeTimerRef.current) {
+      clearTimeout(nudgeTimerRef.current);
+      nudgeTimerRef.current = null;
+    }
+  };
+
+  const scheduleNudge = (plan) => {
+    clearNudgeTimer();
+    if (!plan.checkInSettings?.enabled) return;
+
+    const thresholdMs = plan.checkInSettings.quietThresholdMinutes * 60 * 1000;
+    nudgeTimerRef.current = setTimeout(() => {
+      const nudgeMsg = {
+        id: Date.now(),
+        sender: 'nereid',
+        type: 'nudge-card',
+        text: plan.checkInSettings.message || "Still there? No pressure to respond.",
+        timestamp: new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }),
+      };
+      onUpdateMessages([...messagesRef.current, nudgeMsg]);
+      nudgeTimerRef.current = null;
+    }, thresholdMs);
+  };
 
   const sendMessage = async (text) => {
     if (!text.trim()) return;
+
+    // Reset nudge timer on new user input
+    clearNudgeTimer();
 
     const userMessage = {
       id: Date.now(),
@@ -61,7 +108,35 @@ const Chat = ({ messages = [], onUpdateMessages }) => {
         analysis: response.data.analysis, // Capture emotional analysis metadata from API response
       };
 
-      onUpdateMessages([...currentHistory, nereidMessage]);
+      const finalHistory = [...currentHistory, nereidMessage];
+
+      // Inline crisis check
+      const urgency = response.data.analysis?.urgency;
+      const plan = getSafetyPlan();
+
+      if (urgency === 'high' || urgency === 'immediate') {
+        // Spike check: Only show card if the previous assistant message wasn't also high/immediate
+        const prevNereidMsg = messages.slice().reverse().find(m => m.sender === 'nereid' && m.analysis);
+        const prevUrgency = prevNereidMsg?.analysis?.urgency;
+        const isSpike = !prevUrgency || (prevUrgency !== 'high' && prevUrgency !== 'immediate');
+
+        if (isSpike) {
+          logEscalationEvent(chatId, urgency, nereidMessage.id);
+
+          const crisisCard = {
+            id: Date.now() + 2,
+            sender: 'nereid',
+            type: 'crisis-card',
+            timestamp: new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }),
+          };
+          finalHistory.push(crisisCard);
+        }
+
+        // Schedule check-in nudge
+        scheduleNudge(plan);
+      }
+
+      onUpdateMessages(finalHistory);
     } catch (error) {
       console.error('Error sending message:', error);
       let errorText = "I'm sorry, something went wrong. ";
@@ -81,6 +156,15 @@ const Chat = ({ messages = [], onUpdateMessages }) => {
     } finally {
       setIsTyping(false);
     }
+  };
+
+  const handleDismissCrisisCard = (msgId) => {
+    dismissLastEscalationEvent(chatId);
+    onUpdateMessages(messages.filter(m => m.id !== msgId));
+  };
+
+  const handleDismissNudge = (msgId) => {
+    onUpdateMessages(messages.filter(m => m.id !== msgId));
   };
 
   const showWelcome = messages.length <= 1;
@@ -123,20 +207,91 @@ const Chat = ({ messages = [], onUpdateMessages }) => {
             </div>
           )}
 
-          {messages.map((message) => (
-            <div
-              key={message.id}
-              className={`message ${message.sender === 'user' ? 'user-message' : 'nereid-message'}`}
-            >
-              {message.sender === 'nereid' && (
-                <div className="message-avatar"><NereidAvatar /></div>
-              )}
-              <div className="message-content">
-                <div className="message-bubble">{message.text}</div>
-                <div className="message-timestamp">{message.timestamp}</div>
+          {messages.map((message) => {
+            if (message.type === 'crisis-card') {
+              return (
+                <div key={message.id} className="message nereid-message crisis-card-wrapper">
+                  <div className="message-avatar"><NereidAvatar /></div>
+                  <div className="message-content">
+                    <div className="crisis-resource-card">
+                      <div className="crisis-card-header">
+                        <AlertTriangle className="crisis-warn-icon" size={18} />
+                        <h4>It sounds like things are heavy right now.</h4>
+                      </div>
+                      <p className="crisis-card-intro">
+                        Please know that you're not alone. Here is verified support if you'd like to reach out:
+                      </p>
+                      
+                      <div className="crisis-contacts-grid">
+                        <div className="crisis-contact-box">
+                          <a href="tel:988" className="crisis-call-link">Call 988 (Lifeline)</a>
+                          <span className="crisis-desc">Free, confidential, 24/7 support line</span>
+                        </div>
+                        <div className="crisis-contact-box">
+                          <a href="sms:741741?&body=HOME" className="crisis-call-link">Text HOME to 741741</a>
+                          <span className="crisis-desc">Connect with Crisis Text Line</span>
+                        </div>
+                      </div>
+
+                      <div className="crisis-card-footer">
+                        <button 
+                          className="view-plan-btn"
+                          onClick={() => setSafetyPlanDrawerOpen(true)}
+                        >
+                          <Shield size={14} />
+                          <span>View My Safety Plan</span>
+                        </button>
+                        <button 
+                          className="dismiss-crisis-btn"
+                          onClick={() => handleDismissCrisisCard(message.id)}
+                        >
+                          I'm safe / Dismiss
+                        </button>
+                      </div>
+                    </div>
+                    <div className="message-timestamp">{message.timestamp}</div>
+                  </div>
+                </div>
+              );
+            }
+
+            if (message.type === 'nudge-card') {
+              return (
+                <div key={message.id} className="message nereid-message nudge-card-wrapper">
+                  <div className="message-avatar"><NereidAvatar /></div>
+                  <div className="message-content">
+                    <div className="nudge-bubble">
+                      <p className="nudge-text">{message.text}</p>
+                      <div className="nudge-actions">
+                        <button className="nudge-action-btn ok" onClick={() => handleDismissNudge(message.id)}>
+                          I'm okay
+                        </button>
+                        <button className="nudge-action-btn talk" onClick={() => handleDismissNudge(message.id)}>
+                          Keep talking
+                        </button>
+                      </div>
+                    </div>
+                    <div className="message-timestamp">{message.timestamp}</div>
+                  </div>
+                </div>
+              );
+            }
+
+            return (
+              <div
+                key={message.id}
+                className={`message ${message.sender === 'user' ? 'user-message' : 'nereid-message'}`}
+              >
+                {message.sender === 'nereid' && (
+                  <div className="message-avatar"><NereidAvatar /></div>
+                )}
+                <div className="message-content">
+                  <div className="message-bubble">{message.text}</div>
+                  <div className="message-timestamp">{message.timestamp}</div>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
 
           {isTyping && (
             <div className="message nereid-message">
@@ -160,6 +315,13 @@ const Chat = ({ messages = [], onUpdateMessages }) => {
           Nereid is an AI and can make mistakes. For emergencies, please contact a professional.
         </div>
       </div>
+
+      {/* ── Safety Plan Drawer Overlay ── */}
+      <SafetyPlanDrawer
+        isOpen={safetyPlanDrawerOpen}
+        onClose={() => setSafetyPlanDrawerOpen(false)}
+        onNavigateToPlan={onSelectTab}
+      />
     </div>
   );
 };
