@@ -1,57 +1,149 @@
-/* ─── Nereid Global Styles ─────────────────────────────── */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Work+Sans:wght@400;500;600;700&display=swap');
 
+/* ─────────────────────────────────────────────────────────────────────────
+   Nereid — Design Tokens
+   A calm, water-inspired palette: sea-mist backgrounds, deep tide ink,
+   a muted current-teal as the primary voice, and warm coral used sparingly
+   for care and urgency. Grounded in the app's own wave/water identity.
+   ───────────────────────────────────────────────────────────────────────── */
 :root {
-  --bg-base:       #0d1117;
-  --bg-surface:    #161b22;
-  --bg-elevated:   #1c2333;
-  --bg-hover:      #21262d;
-  --border:        rgba(255,255,255,0.06);
-  --border-hover:  rgba(255,255,255,0.12);
+  /* Core palette */
+  --mist: #F1F5F3;
+  /* page background — soft sage-tinted white */
+  --surface: #FFFFFF;
+  /* card surfaces */
+  --surface-2: #FAFBF9;
+  /* recessed surfaces (inputs, wells) */
+  --tide: #1E3A35;
+  /* primary ink — deep teal-charcoal */
+  --tide-soft: #4A5D58;
+  /* secondary ink */
+  --current: #3F7268;
+  /* primary accent — muted teal */
+  --current-deep: #2C534B;
+  /* hover/active teal */
+  --current-soft: rgba(63, 114, 104, 0.10);
+  --current-softer: rgba(63, 114, 104, 0.06);
+  --driftwood: #8A8377;
+  /* muted borders / secondary text */
+  --driftwood-soft: rgba(138, 131, 119, 0.18);
+  --coral: #C1614A;
+  /* warm accent — care, warmth, CTAs in crisis */
+  --coral-soft: rgba(193, 97, 74, 0.10);
+  --coral-deep: #A64F3B;
 
-  --teal-500:      #14b8a6;
-  --teal-400:      #2dd4bf;
-  --teal-300:      #5eead4;
-  --teal-glow:     rgba(20, 184, 166, 0.18);
-  --teal-glow-sm:  rgba(20, 184, 166, 0.08);
+  /* Mood / status hues (used across Insights) */
+  --mood-anxious: #C99A3D;
+  --mood-overwhelmed: #C1614A;
+  --mood-sad: #6B84A3;
+  --mood-happy: #4F8F6D;
+  --mood-neutral: #9C9484;
+  --mood-crisis: #A8402E;
+  --advice-purple: #7D6B94;
 
-  --blue-500:      #3b82f6;
-  --blue-600:      #2563eb;
-  --blue-glow:     rgba(59, 130, 246, 0.15);
+  /* Elevation */
+  --shadow-sm: 0 1px 2px rgba(30, 58, 53, 0.06), 0 1px 1px rgba(30, 58, 53, 0.04);
+  --shadow-md: 0 12px 28px -12px rgba(30, 58, 53, 0.16), 0 2px 8px rgba(30, 58, 53, 0.06);
+  --shadow-lg: 0 24px 48px -16px rgba(30, 58, 53, 0.20), 0 4px 12px rgba(30, 58, 53, 0.08);
 
-  --text-primary:  #e6edf3;
-  --text-secondary:#8b949e;
-  --text-muted:    #484f58;
+  /* Radii */
+  --r-sm: 8px;
+  --r-md: 14px;
+  --r-lg: 20px;
+  --r-pill: 999px;
 
-  --radius-sm:     8px;
-  --radius-md:     12px;
-  --radius-lg:     16px;
-  --radius-xl:     20px;
-  --radius-full:   9999px;
-
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.4);
-  --shadow-md: 0 4px 16px rgba(0,0,0,0.5);
-  --shadow-lg: 0 8px 32px rgba(0,0,0,0.6);
-  --shadow-teal: 0 0 24px rgba(20,184,166,0.25);
+  /* Type */
+  --font-display: 'Lora', Georgia, serif;
+  --font-body: 'Work Sans', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
-html, body, #root {
+html,
+body,
+#root {
   height: 100%;
-  overflow: hidden;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  background-color: var(--bg-base);
-  color: var(--text-primary);
+  background: var(--mist);
+  color: var(--tide);
+  font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border-hover); border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  color: var(--tide);
+  margin: 0;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+p {
+  margin: 0;
+}
+
+button {
+  font-family: var(--font-body);
+  cursor: pointer;
+}
+
+input,
+textarea {
+  font-family: var(--font-body);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--driftwood-soft);
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--driftwood);
+}
+
+:focus-visible {
+  outline: 2px solid var(--current);
+  outline-offset: 2px;
+}
+
+/* ── Signature motif: soft wave divider ──────────────────────────────────
+   Used under page headers app-wide to echo Nereid's wave identity. */
+.wave-divider {
+  width: 100%;
+  height: 20px;
+  background-repeat: repeat-x;
+  background-size: 80px 20px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='20' viewBox='0 0 80 20'%3E%3Cpath d='M0 10 Q10 2 20 10 T40 10 T60 10 T80 10' fill='none' stroke='%233F7268' stroke-opacity='0.18' stroke-width='1.6'/%3E%3C/svg%3E");
+  opacity: 0.9;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

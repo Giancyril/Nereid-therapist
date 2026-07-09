@@ -35,8 +35,8 @@ const HistoryView = ({ chats = [], onSelectChat, onDeleteChat }) => {
       {/* ── Header ── */}
       <div className="history-header">
         <div>
-          <h1 className="history-title">Reflection History</h1>
-          <p className="history-subtitle">Review, search, and resume your emotional journey sessions</p>
+          <div className="history-title">Reflection History</div>
+          <div className="history-subtitle">Review, search, and resume your emotional journey sessions</div>
         </div>
       </div>
 
@@ -57,7 +57,7 @@ const HistoryView = ({ chats = [], onSelectChat, onDeleteChat }) => {
             {filteredChats.map((chat) => {
               const lastMsg = chat.messages[chat.messages.length - 1];
               const moodTags = getMoodTags(chat);
-              
+
               return (
                 <div key={chat.id} className="history-session-card">
                   <div className="session-card-header">
@@ -76,12 +76,12 @@ const HistoryView = ({ chats = [], onSelectChat, onDeleteChat }) => {
                       <Trash2 size={13} />
                     </button>
                   </div>
-                  
+
                   <div className="session-card-body">
                     <p className="session-msg-preview">
                       {lastMsg ? lastMsg.text : 'Empty conversation.'}
                     </p>
-                    
+
                     {moodTags.length > 0 && (
                       <div className="session-mood-tags">
                         {moodTags.map(mood => (
@@ -98,8 +98,8 @@ const HistoryView = ({ chats = [], onSelectChat, onDeleteChat }) => {
                       <Calendar size={12} />
                       <span>{getChatDate(chat)}</span>
                     </div>
-                    <button 
-                      className="session-resume-btn" 
+                    <button
+                      className="session-resume-btn"
                       onClick={() => onSelectChat(chat.id)}
                     >
                       <span>Resume</span>
@@ -115,8 +115,8 @@ const HistoryView = ({ chats = [], onSelectChat, onDeleteChat }) => {
             <BookOpen size={36} className="text-muted" />
             <h2>No Reflections Found</h2>
             <p>
-              {searchQuery 
-                ? 'No past conversations match your search terms.' 
+              {searchQuery
+                ? 'No past conversations match your search terms.'
                 : 'Start chatting with Nereid to build up your reflection history!'}
             </p>
           </div>

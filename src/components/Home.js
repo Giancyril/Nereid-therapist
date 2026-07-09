@@ -259,26 +259,11 @@ const Home = ({ onEnterDashboard, onStartChat }) => {
         </div>
       </section>
 
-      {/* ── SAFETY NOTE ──────────────────────────────────────────────── */}
-      <section className="landing-safety" id="landing-safety">
-        <div className="landing-safety-inner">
-          <Heart size={15} className="safety-heart" aria-hidden="true" />
-          <p className="safety-text">
-            Nereid is here to listen, but isn't a substitute for professional care.
-            If you're in crisis, help is always close by.{' '}
-            <button className="safety-link" onClick={onEnterDashboard} id="landing-crisis-btn">
-              Find crisis support →
-            </button>
-          </p>
-        </div>
-      </section>
-
       {/* ── FOOTER ───────────────────────────────────────────────────── */}
       <footer className="landing-footer">
         <div className="landing-section-inner landing-footer-inner">
           <div className="footer-brand">
             <div className="landing-logo footer-logo">
-              <div className="landing-logo-icon-wrap"><NereidLogo /></div>
               <span className="landing-logo-text">Nereid</span>
             </div>
             <p className="footer-tagline">A calm space to talk, whenever you need it.</p>
