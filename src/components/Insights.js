@@ -1,65 +1,130 @@
-import React from 'react';
-import { TrendingUp, BarChart2, Smile, AlertTriangle, Calendar, Heart, Info } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
+import { TrendingUp, BarChart2, Smile, AlertTriangle, Calendar, Heart, Info, BookOpen, MessageSquare } from 'lucide-react';
+import { getJournalEntries } from '../utils/journalStorage';
 import './Insights.css';
 
 const Insights = ({ chats = [] }) => {
-  // Aggregate stats from chats
-  let totalUserMessages = 0;
-  let moodCounts = { anxious: 0, sad: 0, neutral: 0, happy: 0, overwhelmed: 0, crisis: 0 };
-  let topicCounts = {};
-  let distressTrend = []; // List of { level: number, mood: string, label: string }
-  let urgencyCounts = { low: 0, moderate: 0, high: 0, immediate: 0 };
+  const [filter, setFilter] = useState('both'); // both, chat, journal
 
-  chats.forEach((chat) => {
-    chat.messages.forEach((msg) => {
-      if (msg.sender === 'user') {
-        totalUserMessages++;
-        
-        const analysis = msg.analysis;
-        if (analysis) {
-          // 1. Mood
-          const mood = analysis.emotional_state || 'neutral';
+  const journalEntries = useMemo(() => getJournalEntries(), []);
+
+  // Aggregate stats from chats and/or journal
+  const {
+    totalReflections,
+    moodCounts,
+    topicCounts,
+    distressTrend,
+    urgencyCounts,
+    hasData
+  } = useMemo(() => {
+    let totalReflections = 0;
+    let moodCounts = { anxious: 0, sad: 0, neutral: 0, happy: 0, overwhelmed: 0, crisis: 0 };
+    let topicCounts = {};
+    let distressTrend = []; // List of { level: number, mood: string, time: string, timestamp: number, source: string }
+    let urgencyCounts = { low: 0, moderate: 0, high: 0, immediate: 0 };
+    let hasData = false;
+
+    const includeChat = filter === 'both' || filter === 'chat';
+    const includeJournal = filter === 'both' || filter === 'journal';
+
+    if (includeChat) {
+      chats.forEach((chat) => {
+        chat.messages.forEach((msg) => {
+          if (msg.sender === 'user') {
+            const analysis = msg.analysis;
+            if (analysis) {
+              hasData = true;
+              totalReflections++;
+              const mood = analysis.emotional_state || 'neutral';
+              moodCounts[mood] = (moodCounts[mood] || 0) + 1;
+              
+              const urgency = analysis.urgency || 'low';
+              urgencyCounts[urgency] = (urgencyCounts[urgency] || 0) + 1;
+              
+              const topics = analysis.topics || [];
+              topics.forEach((t) => {
+                topicCounts[t] = (topicCounts[t] || 0) + 1;
+              });
+
+              let level = 1;
+              if (urgency === 'moderate') level = 2;
+              if (urgency === 'high') level = 3;
+              if (urgency === 'immediate') level = 4;
+
+              distressTrend.push({
+                level,
+                mood,
+                time: msg.timestamp || '',
+                timestamp: msg.id || Date.now(),
+                source: 'chat'
+              });
+            }
+          }
+        });
+      });
+    }
+
+    if (includeJournal) {
+      journalEntries.forEach((entry) => {
+        if (entry.sentiment) {
+          hasData = true;
+          totalReflections++;
+          const mood = entry.sentiment || 'neutral';
           moodCounts[mood] = (moodCounts[mood] || 0) + 1;
-
-          // 2. Urgency
-          const urgency = analysis.urgency || 'low';
+          
+          const urgency = entry.urgency || 'low';
           urgencyCounts[urgency] = (urgencyCounts[urgency] || 0) + 1;
-
-          // 3. Topics
-          const topics = analysis.topics || [];
+          
+          const topics = entry.topics || [];
           topics.forEach((t) => {
             topicCounts[t] = (topicCounts[t] || 0) + 1;
           });
 
-          // 4. Trend point
-          let level = 1; // Low
+          let level = 1;
           if (urgency === 'moderate') level = 2;
           if (urgency === 'high') level = 3;
           if (urgency === 'immediate') level = 4;
-          
+
           distressTrend.push({
             level,
             mood,
-            time: msg.timestamp || ''
+            time: new Date(entry.createdAt).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }),
+            timestamp: new Date(entry.createdAt).getTime(),
+            source: 'journal'
           });
         }
-      }
-    });
-  });
+      });
+    }
+
+    // Sort chronologically for the chart path
+    distressTrend.sort((a, b) => a.timestamp - b.timestamp);
+
+    return {
+      totalReflections,
+      moodCounts,
+      topicCounts,
+      distressTrend,
+      urgencyCounts,
+      hasData
+    };
+  }, [chats, journalEntries, filter]);
 
   // Calculate dominant mood
-  let dominantMood = 'neutral';
-  let maxMoodCount = -1;
-  Object.keys(moodCounts).forEach((mood) => {
-    if (moodCounts[mood] > maxMoodCount && moodCounts[mood] > 0) {
-      maxMoodCount = moodCounts[mood];
-      dominantMood = mood;
-    }
-  });
+  const dominantMood = useMemo(() => {
+    let domMood = 'neutral';
+    let maxMoodCount = -1;
+    Object.keys(moodCounts).forEach((mood) => {
+      if (moodCounts[mood] > maxMoodCount && moodCounts[mood] > 0) {
+        maxMoodCount = moodCounts[mood];
+        domMood = mood;
+      }
+    });
+    return domMood;
+  }, [moodCounts]);
 
   // Build line chart SVG elements if data exists
-  const buildTrendLine = () => {
-    const points = distressTrend.slice(-10); // Display last 10 messages
+  const trendData = useMemo(() => {
+    const points = distressTrend.slice(-10); // Display last 10 points
     if (points.length < 2) return null;
 
     const width = 500;
@@ -87,63 +152,59 @@ const Insights = ({ chats = [] }) => {
     const areaD = `${pathD} L ${xCoords[xCoords.length - 1]} ${height - padding} L ${xCoords[0]} ${height - padding} Z`;
 
     return { pathD, areaD, xCoords, yCoords, points };
-  };
-
-  const trendData = buildTrendLine();
+  }, [distressTrend]);
 
   // Get Advice based on dominant mood
-  const getActionableAdvice = () => {
+  const advice = useMemo(() => {
     switch (dominantMood) {
       case 'anxious':
         return {
           title: 'Managing Anxiety & Stress',
           text: 'We noticed you have been feeling anxious recently. Box breathing can help stimulate your vagus nerve and slow your heart rate.',
-          recommendation: 'Try a 5-minute Box Breathing exercise on the Resources tab.',
-          color: 'teal'
+          recommendation: 'Try a 3-minute guided breathing session in the Resources tab.',
+          color: 'purple',
         };
       case 'overwhelmed':
         return {
-          title: 'Overcoming Sensory / Mind Overload',
-          text: 'When feeling overwhelmed, taking immediate action can be difficult. Breaking tasks down and using grounding methods helps.',
-          recommendation: 'Try the 5-4-3-2-1 Grounding Method on the Resources tab.',
-          color: 'blue'
+          title: 'Grounding in Heavy Moments',
+          text: 'When distress scales quickly, grounding brings us back. Connecting to physical surroundings interrupts rising panic loops.',
+          recommendation: 'Open the Resources tab and use the 5-4-3-2-1 Grounding Method.',
+          color: 'red',
         };
       case 'sad':
         return {
-          title: 'Coping with Sadness & Low Mood',
-          text: 'Sadness is a natural emotional release. Remember to be gentle with yourself. Small actions, like writing thoughts down, help process it.',
-          recommendation: 'Explore the Journaling prompts on the Resources tab.',
-          color: 'purple'
+          title: 'Processing Low Moments',
+          text: 'Feeling sad or low is a natural process. Journaling or putting down thoughts without filters helps externalize emotional pressure.',
+          recommendation: 'Spend a few minutes in Journal mode to reflect privately.',
+          color: 'blue',
+        };
+      case 'happy':
+        return {
+          title: 'Preserving Joy & Ease',
+          text: 'Experiencing comfort or happiness is wonderful. Write down what created this feeling to anchor it in memory.',
+          recommendation: 'Add a positive reflection inside your Journal to read back later.',
+          color: 'green',
         };
       case 'crisis':
         return {
-          title: 'Important Support Notice',
-          text: 'Your entries show significant distress. Please consider talking to a healthcare professional or a crisis line.',
-          recommendation: 'Dial 988 or reach out using the Emergency resources.',
-          color: 'red'
+          title: 'Professional Support First',
+          text: 'You have been walking through extremely heavy waves. Please let professional supporters help guide you to safer shores.',
+          recommendation: 'Reach out to the 988 Crisis Line or open your saved Safety Plan.',
+          color: 'red',
         };
       default:
         return {
-          title: 'Maintaining Positive Mental Wellness',
-          text: 'You are doing great! Consistently reviewing your emotional state helps build emotional intelligence and resilience over time.',
-          recommendation: 'Continue chatting with Nereid and practicing mindful reflections.',
-          color: 'teal'
+          title: 'Mindfulness & Grounding',
+          text: 'Reflective practices strengthen resilience over time. Check in regularly with Nereid or write in your private journal.',
+          recommendation: 'Consider scheduling a quiet 5-minute reflection block today.',
+          color: 'teal',
         };
     }
+  }, [dominantMood]);
+
+  const formatTopic = (t) => {
+    return t.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
   };
-
-  const advice = getActionableAdvice();
-
-  // Format topic labels
-  const formatTopic = (topic) => {
-    return topic
-      .split('_')
-      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-      .join(' ');
-  };
-
-  // Check if we have any analysis data
-  const hasData = totalUserMessages > 0 && Object.values(moodCounts).some((v) => v > 0);
 
   if (!hasData) {
     return (
@@ -159,7 +220,7 @@ const Insights = ({ chats = [] }) => {
             <BarChart2 size={48} className="text-muted" />
           </div>
           <h2>Awaiting Emotional Data</h2>
-          <p>Once you start sharing and chatting with Nereid, we will generate your mood analysis, distressed trends, and wellness advice here.</p>
+          <p>Once you start sharing, chatting, or writing in your journal, we will generate your mood analysis, distress trends, and wellness advice here.</p>
         </div>
       </div>
     );
@@ -168,14 +229,36 @@ const Insights = ({ chats = [] }) => {
   return (
     <div className="insights-container">
       {/* ── Header ── */}
-      <div className="insights-header">
-        <div>
-          <h1 className="insights-title">Emotional Insights</h1>
-          <p className="insights-subtitle">Analysis of your mood, topics, and wellbeing trends</p>
+      <div className="insights-header-row">
+        <div className="insights-header">
+          <div>
+            <h1 className="insights-title">Emotional Insights</h1>
+            <p className="insights-subtitle">Analysis of your mood, topics, and wellbeing trends</p>
+          </div>
         </div>
-        <div className="last-updated-badge">
-          <Calendar size={12} />
-          <span>Active Session Analysis</span>
+
+        {/* Filter Toggle */}
+        <div className="insights-filter-group">
+          <button 
+            className={`filter-btn ${filter === 'both' ? 'active' : ''}`}
+            onClick={() => setFilter('both')}
+          >
+            All Data
+          </button>
+          <button 
+            className={`filter-btn ${filter === 'chat' ? 'active' : ''}`}
+            onClick={() => setFilter('chat')}
+          >
+            <MessageSquare size={12} />
+            <span>Chat Only</span>
+          </button>
+          <button 
+            className={`filter-btn ${filter === 'journal' ? 'active' : ''}`}
+            onClick={() => setFilter('journal')}
+          >
+            <BookOpen size={12} />
+            <span>Journal Only</span>
+          </button>
         </div>
       </div>
 
@@ -209,9 +292,9 @@ const Insights = ({ chats = [] }) => {
             <h3>Total Reflections</h3>
             <div className="stat-val text-teal">
               <Heart size={20} />
-              <span>{totalUserMessages} Messages</span>
+              <span>{totalReflections} Inputs</span>
             </div>
-            <p className="stat-desc">Total emotional inputs shared with Nereid in this session.</p>
+            <p className="stat-desc">Total inputs analyzed from your selected reflections.</p>
           </div>
         </div>
 
@@ -224,7 +307,11 @@ const Insights = ({ chats = [] }) => {
               <TrendingUp size={16} className="text-teal" />
               <h3>Emotional Distress Trend</h3>
             </div>
-            <p className="chart-desc">Intensity of distress over your last 10 messages.</p>
+            <p className="chart-desc">
+              Intensity of distress over last 10 inputs. 
+              <span className="legend-marker chat-marker">●</span> Chat 
+              <span className="legend-marker journal-marker">●</span> Journal
+            </p>
             
             <div className="trend-chart-container">
               {trendData ? (
@@ -250,18 +337,23 @@ const Insights = ({ chats = [] }) => {
                     <path d={trendData.pathD} fill="none" stroke="#2dd4bf" strokeWidth="2.5" strokeLinecap="round" />
 
                     {/* Interactive dots */}
-                    {trendData.xCoords.map((x, idx) => (
-                      <circle
-                        key={idx}
-                        cx={x}
-                        cy={trendData.yCoords[idx]}
-                        r="4"
-                        fill="#0d1117"
-                        stroke="#2dd4bf"
-                        strokeWidth="2"
-                        className="trend-dot"
-                      />
-                    ))}
+                    {trendData.xCoords.map((x, idx) => {
+                      const pt = trendData.points[idx];
+                      const strokeColor = pt.source === 'journal' ? 'var(--mood-anxious)' : '#2dd4bf';
+                      return (
+                        <circle
+                          key={idx}
+                          cx={x}
+                          cy={trendData.yCoords[idx]}
+                          r="4.5"
+                          fill="#0d1117"
+                          stroke={strokeColor}
+                          strokeWidth="2.5"
+                          className="trend-dot"
+                          title={`${pt.source.toUpperCase()}: level ${pt.level}`}
+                        />
+                      );
+                    })}
                   </svg>
                   <div className="chart-y-axis-labels">
                     <span>Crisis</span>
@@ -290,7 +382,7 @@ const Insights = ({ chats = [] }) => {
               {Object.keys(moodCounts).map((mood) => {
                 const count = moodCounts[mood];
                 if (count === 0) return null;
-                const percentage = Math.round((count / totalUserMessages) * 100);
+                const percentage = Math.round((count / totalReflections) * 100);
                 
                 return (
                   <div key={mood} className="mood-progress-row">
@@ -340,7 +432,7 @@ const Insights = ({ chats = [] }) => {
               {Object.keys(topicCounts).length > 0 ? (
                 Object.keys(topicCounts).map((topic) => {
                   const count = topicCounts[topic];
-                  const percentage = Math.round((count / totalUserMessages) * 100);
+                  const percentage = Math.round((count / totalReflections) * 100);
                   return (
                     <div key={topic} className="topic-bar-row">
                       <div className="topic-name">{formatTopic(topic)}</div>
