@@ -6,6 +6,8 @@ import Resources from './components/Resources';
 import Insights from './components/Insights';
 import Home from './components/Home';
 import SafetyPlanView from './components/SafetyPlanView';
+import JournalView from './components/JournalView';
+import ProfileView from './components/ProfileView';
 import { getSafetyPlan, getEscalationEvents, saveEscalationEvents } from './utils/safetyStorage';
 import './App.css';
 
@@ -233,6 +235,10 @@ function App() {
         return <Resources />;
       case 'safety-plan':
         return <SafetyPlanView />;
+      case 'journal':
+        return <JournalView onSelectTab={setActiveTab} />;
+      case 'profile':
+        return <ProfileView />;
       case 'insights':
         return <Insights chats={chats} />;
       default:

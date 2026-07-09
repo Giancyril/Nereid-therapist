@@ -28,9 +28,11 @@
   overflow: hidden;
 }
 
-/* Scrollable pages (History, Safety Plan, Resources, Insights) */
+/* Scrollable pages (History, Safety Plan, Journal, Profile, Resources, Insights) */
 .main-content .history-page-container,
 .main-content .safety-plan-container,
+.main-content .journal-page-container,
+.main-content .profile-view-container,
 .main-content .resources-container,
 .main-content .insights-container {
   flex: 1;

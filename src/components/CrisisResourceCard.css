@@ -1,0 +1,124 @@
+/* ── Crisis Resource Card ── */
+.crisis-resource-card {
+  background: var(--surface-2);
+  border: 2px solid rgba(193, 97, 74, 0.25);
+  border-radius: var(--r-lg);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+}
+
+.crisis-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.crisis-warn-icon {
+  color: var(--coral);
+}
+
+.crisis-card-header h4 {
+  font-family: var(--font-display);
+  font-size: 0.98rem;
+  font-weight: 600;
+  color: var(--tide);
+  margin: 0;
+}
+
+.crisis-card-intro {
+  font-size: 0.85rem;
+  color: var(--tide-soft);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.crisis-contacts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.crisis-contact-box {
+  background: var(--surface);
+  border: 1px solid var(--driftwood-soft);
+  border-radius: var(--r-md);
+  padding: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.crisis-call-link {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--coral-deep);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.crisis-call-link:hover {
+  color: var(--coral);
+}
+
+.crisis-desc {
+  font-size: 0.72rem;
+  color: var(--driftwood);
+}
+
+.crisis-card-footer {
+  display: flex;
+  gap: 0.75rem;
+  border-top: 1px solid var(--driftwood-soft);
+  padding-top: 1rem;
+  margin-top: 0.25rem;
+  flex-wrap: wrap;
+}
+
+.crisis-card-footer .view-plan-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1rem;
+  background: var(--current-softer);
+  color: var(--current-deep);
+  border: 1px solid var(--current-soft);
+  border-radius: var(--r-pill);
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.crisis-card-footer .view-plan-btn:hover {
+  background: var(--current-soft);
+}
+
+.crisis-card-footer .dismiss-crisis-btn {
+  padding: 0.5rem 1rem;
+  background: transparent;
+  color: var(--tide-soft);
+  border: 1px solid var(--driftwood-soft);
+  border-radius: var(--r-pill);
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  margin-left: auto;
+}
+
+.crisis-card-footer .dismiss-crisis-btn:hover {
+  background: var(--current-softer);
+  color: var(--tide);
+}
+
+@media (max-width: 600px) {
+  .crisis-contacts-grid {
+    grid-template-columns: 1fr;
+  }
+}
