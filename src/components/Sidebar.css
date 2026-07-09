@@ -288,12 +288,12 @@
 .chat-item-delete {
   position: absolute;
   right: 6px;
-  width: 18px;
-  height: 18px;
+  width: 24px;
+  height: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
+  border-radius: 5px;
   background: transparent;
   border: none;
   color: var(--driftwood);

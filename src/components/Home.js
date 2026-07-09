@@ -44,7 +44,7 @@ const ApproachIllustration = () => (
 
 const features = [
   { icon: <MessageSquare size={22} />, label: 'Talk it out', desc: 'Judgment-free conversations, any time. Nereid listens without interrupting, without judging.' },
-  { icon: <BarChart2 size={22} />, label: 'Track your journey', desc: 'Revisit reflections and see mood trends over time — a quiet record of how far you\'ve come.' },
+  { icon: <BarChart2 size={22} />, label: 'Track your journey', desc: 'Revisit reflections and see mood trends over time a quiet record of how far you\'ve come.' },
   { icon: <BookOpen size={22} />, label: 'Find your calm', desc: 'Guided breathing and grounding exercises when things feel like too much.' },
 ];
 
@@ -54,7 +54,7 @@ const qualities = [
   { icon: <Zap size={18} />, label: 'Instant responses', desc: 'No waiting rooms, no appointments. Start a conversation in seconds.' },
   { icon: <Smile size={18} />, label: 'Warm & non-clinical', desc: 'Nereid speaks like a compassionate friend, not a medical report.' },
   { icon: <TrendingUp size={18} />, label: 'Mood insights', desc: 'See patterns in how you\'re feeling across days, weeks, and sessions.' },
-  { icon: <Lock size={18} />, label: 'No judgment, ever', desc: 'You can say exactly how you feel — nothing is too small or too heavy.' },
+  { icon: <Lock size={18} />, label: 'No judgment, ever', desc: 'You can say exactly how you feel nothing is too small or too heavy.' },
 ];
 
 const steps = [
@@ -146,10 +146,10 @@ const Home = ({ onEnterDashboard, onStartChat }) => {
           </div>
           <div className="story-text-col">
             <p className="story-body">
-              Sometimes the hardest part isn't what you're going through — it's having somewhere safe to say it out loud. Nereid was built for exactly those moments: the 3 AM restlessness, the midday spiral, the quiet dread you can't quite name.
+              Sometimes the hardest part isn't what you're going through it's having somewhere safe to say it out loud. Nereid was built for exactly those moments: the 3 AM restlessness, the midday spiral, the quiet dread you can't quite name.
             </p>
             <p className="story-body">
-              We designed Nereid around one belief: that being heard — really heard, without rushing you toward a solution — is often the most healing thing of all. No appointments. No waitlists. No judgment. Just a calm, private space that's always open.
+              We designed Nereid around one belief: that being heard really heard, without rushing you toward a solution is often the most healing thing of all. No appointments. No waitlists. No judgment. Just a calm, private space that's always open.
             </p>
             <p className="story-body">
               Nereid is not a replacement for therapy. It's the companion you reach for between sessions, or before you're ready to reach out to anyone else. A first step. A steady presence.
@@ -168,7 +168,7 @@ const Home = ({ onEnterDashboard, onStartChat }) => {
             <p className="section-eyebrow">Our approach</p>
             <h2 className="section-headline">Listen first. Always.</h2>
             <p className="approach-body">
-              Nereid is grounded in <strong>reflective listening</strong> — the practice of following what you share, asking gentle questions, and never rushing ahead of where you are. It doesn't offer diagnoses or clinical assessments.
+              Nereid is grounded in <strong>reflective listening</strong> the practice of following what you share, asking gentle questions, and never rushing ahead of where you are. It doesn't offer diagnoses or clinical assessments.
             </p>
             <p className="approach-body">
               Instead, it holds space. It helps you notice patterns across conversations. It offers grounding exercises drawn from evidence-based practices when you need a pause, not a prescription.
@@ -271,7 +271,7 @@ const Home = ({ onEnterDashboard, onStartChat }) => {
         <div className="landing-section-inner">
           <div className="footer-bottom">
             <p className="footer-legal">
-              Nereid is a supportive tool, not a clinical service. In an emergency, call your local crisis line or emergency services.
+              Nereid is a supportive tool, not a clinical service. In an emergency, call emergency services.
             </p>
             <p className="footer-copyright">© {new Date().getFullYear()} Nereid</p>
           </div>

@@ -4,19 +4,19 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  background: var(--surface);
+  background: var(--mist);
 }
 
 /* ── Header ── */
 .safety-header-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 2.5rem;
   height: 68px;
-  border-bottom: 1px solid var(--driftwood-soft);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2.5rem;
   background: var(--surface);
-  flex-shrink: 0;
+  border-bottom: 1px solid var(--driftwood-soft);
+  box-sizing: border-box;
 }
 
 .safety-header-bar .header-title {
@@ -24,6 +24,7 @@
   font-size: 0.95rem;
   font-weight: 600;
   color: var(--tide);
+  line-height: 1.2;
 }
 
 .safety-header-bar .header-subtitle {
@@ -146,13 +147,33 @@
   margin: 0;
 }
 
-.section-card-header .icon-warning { color: var(--coral); }
-.section-card-header .icon-coping { color: var(--current); }
-.section-card-header .icon-distract { color: var(--current-deep); }
-.section-card-header .icon-contacts { color: var(--current); }
-.section-card-header .icon-env { color: var(--driftwood); }
-.section-card-header .icon-professional { color: var(--current-deep); }
-.section-card-header .icon-settings { color: var(--tide); }
+.section-card-header .icon-warning {
+  color: var(--coral);
+}
+
+.section-card-header .icon-coping {
+  color: var(--current);
+}
+
+.section-card-header .icon-distract {
+  color: var(--current-deep);
+}
+
+.section-card-header .icon-contacts {
+  color: var(--current);
+}
+
+.section-card-header .icon-env {
+  color: var(--driftwood);
+}
+
+.section-card-header .icon-professional {
+  color: var(--current-deep);
+}
+
+.section-card-header .icon-settings {
+  color: var(--tide);
+}
 
 .section-instruction {
   font-size: 0.82rem;
@@ -454,15 +475,19 @@
   .safety-grid-layout {
     grid-template-columns: 1fr;
   }
+
   .safety-settings-panel {
     position: static;
   }
+
   .form-fields {
     grid-template-columns: 1fr;
   }
+
   .safety-content-wrapper {
     padding: 1.5rem;
   }
+
   .safety-header-bar {
     padding: 0 1.5rem;
   }

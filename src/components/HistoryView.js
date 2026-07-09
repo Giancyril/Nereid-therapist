@@ -35,8 +35,8 @@ const HistoryView = ({ chats = [], onSelectChat, onDeleteChat }) => {
       {/* ── Header ── */}
       <div className="history-header">
         <div>
-          <div className="history-title">Reflection History</div>
-          <div className="history-subtitle">Review, search, and resume your emotional journey sessions</div>
+          <div className="header-title">Reflection History</div>
+          <div className="header-subtitle">Review, search, and resume your emotional journey sessions</div>
         </div>
       </div>
 

@@ -15,17 +15,18 @@
   box-sizing: border-box;
 }
 
-.history-title {
+.header-title {
   font-family: var(--font-display);
   font-size: 0.95rem;
+  font-weight: 600;
   color: var(--tide);
-  margin-bottom: 0.1rem;
   line-height: 1.2;
 }
 
-.history-subtitle {
+.header-subtitle {
   font-size: 0.72rem;
   color: var(--tide-soft);
+  margin-top: 0.1rem;
 }
 
 .history-page-content {

@@ -54,7 +54,7 @@ const Chat = ({ chatId = 'default', messages = [], onUpdateMessages, onSelectTab
   });
   const [ttsVoices, setTtsVoices] = useState([]);
   const lastSpokenMsgIdRef = useRef(null);
-  
+
   const messagesEndRef = useRef(null);
   const messagesRef = useRef(messages);
   const nudgeTimerRef = useRef(null);
@@ -308,7 +308,7 @@ const Chat = ({ chatId = 'default', messages = [], onUpdateMessages, onSelectTab
                 <div key={message.id} className="message nereid-message crisis-card-wrapper">
                   <div className="message-avatar"><NereidAvatar /></div>
                   <div className="message-content">
-                    <CrisisResourceCard 
+                    <CrisisResourceCard
                       onOpenSafetyPlan={() => setSafetyPlanDrawerOpen(true)}
                       onDismiss={() => handleDismissCrisisCard(message.id)}
                     />
@@ -387,7 +387,6 @@ const Chat = ({ chatId = 'default', messages = [], onUpdateMessages, onSelectTab
                 }}
                 title={opt.desc}
               >
-                <span className="style-emoji">{opt.emoji}</span>
                 <span className="style-pill-label">{opt.label}</span>
               </button>
             ))}
@@ -473,10 +472,10 @@ const Chat = ({ chatId = 'default', messages = [], onUpdateMessages, onSelectTab
           {showStyleOnboarding && (
             <div className="style-onboarding-tooltip">
               <div className="tooltip-content">
-                <strong>Choose how Nereid listens:</strong> 🌱 Reflective listens, 🔍 CBT reframes, 💨 Venting just hears you out.
+                <strong>Choose how Nereid listens:</strong> Reflective listens, CBT reframes, Venting just hears you out.
               </div>
-              <button 
-                className="tooltip-close" 
+              <button
+                className="tooltip-close"
                 onClick={() => {
                   setShowStyleOnboarding(false);
                   localStorage.setItem('nereid_style_onboarding_seen', 'true');

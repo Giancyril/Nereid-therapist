@@ -170,13 +170,15 @@ const JournalView = ({ onSelectTab }) => {
           </button>
         ) : (
           <div className="journal-title-wrap">
-            <BookMarked size={20} className="journal-header-icon" />
-            <div>
-              <div className="header-title">My Journal</div>
-              <div className="header-subtitle">A private, unguided reflection space</div>
+            <div className="header-left">
+              <div>
+                <div className="header-title">My Journal</div>
+                <div className="header-subtitle">A private, unguided reflection space</div>
+              </div>
             </div>
           </div>
         )}
+
 
         <div className="journal-actions-header">
           {activeEntry ? (
@@ -187,8 +189,8 @@ const JournalView = ({ onSelectTab }) => {
                 {saveStatus === 'saved' && 'Saved locally'}
                 {saveStatus === 'error' && 'Error saving'}
               </span>
-              <button 
-                className="journal-save-btn" 
+              <button
+                className="journal-save-btn"
                 onClick={() => triggerSave(editorText, true)}
                 disabled={isSaving}
               >
@@ -215,7 +217,7 @@ const JournalView = ({ onSelectTab }) => {
                 <span className="prompt-text">Prompt: {activeEntry.prompt}</span>
               </div>
             )}
-            
+
             <textarea
               className="journal-textarea"
               placeholder="Start writing here... (Nereid autosaves your work locally on a pause)"
@@ -237,7 +239,7 @@ const JournalView = ({ onSelectTab }) => {
             {/* Crisis Escalation Integration */}
             {(activeEntry.urgency === 'high' || activeEntry.urgency === 'immediate') && (
               <div className="journal-crisis-container">
-                <CrisisResourceCard 
+                <CrisisResourceCard
                   onOpenSafetyPlan={() => setSafetyDrawerOpen(true)}
                 />
               </div>
@@ -265,9 +267,9 @@ const JournalView = ({ onSelectTab }) => {
             <div className="journal-entries-grid">
               {entries.length > 0 ? (
                 entries.map(entry => (
-                  <div 
-                    key={entry.id} 
-                    className="journal-entry-card" 
+                  <div
+                    key={entry.id}
+                    className="journal-entry-card"
                     onClick={() => {
                       setActiveEntry(entry);
                       setEditorText(entry.text);

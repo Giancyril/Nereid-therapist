@@ -114,7 +114,6 @@ const ProfileView = () => {
       {/* ── Header ── */}
       <div className="profile-header">
         <div className="profile-title-wrap">
-          <User size={20} className="profile-header-icon" />
           <div>
             <div className="profile-title">Memory Profile</div>
             <div className="profile-subtitle">What Nereid remembers about you</div>

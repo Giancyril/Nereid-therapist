@@ -106,8 +106,10 @@ const SafetyPlanView = () => {
       {/* ── Header ── */}
       <div className="safety-header-bar">
         <div className="header-left">
-          <div className="header-title">My Safety Plan</div>
-          <div className="header-subtitle">A personalized guide for challenging emotional moments</div>
+          <div>
+            <div className="header-title">My Safety Plan</div>
+            <div className="header-subtitle">A personalized guide for challenging emotional moments</div>
+          </div>
         </div>
         <div className="header-right">
           <button className="save-plan-btn" onClick={handleSave}>
@@ -137,7 +139,7 @@ const SafetyPlanView = () => {
         <div className="safety-grid-layout">
           {/* LEFT SIDE: Safety Plan Sections */}
           <div className="safety-plan-sections">
-            
+
             {/* Section 1: Warning Signs */}
             <div className="safety-section-card">
               <div className="section-card-header">
@@ -145,7 +147,7 @@ const SafetyPlanView = () => {
                 <h3>1. Warning Signs</h3>
               </div>
               <p className="section-instruction">What does it look or feel like when you are beginning to struggle or feel overwhelmed?</p>
-              
+
               <div className="input-row">
                 <input
                   type="text"
@@ -181,7 +183,7 @@ const SafetyPlanView = () => {
                 <h3>2. Coping Strategies</h3>
               </div>
               <p className="section-instruction">Things you can do on your own to take your mind off things or calm down.</p>
-              
+
               <div className="input-row">
                 <input
                   type="text"
@@ -217,7 +219,7 @@ const SafetyPlanView = () => {
                 <h3>3. Positive Distractions & Environments</h3>
               </div>
               <p className="section-instruction">People, places, or social settings that can help take your mind off distress.</p>
-              
+
               <div className="input-row">
                 <input
                   type="text"
@@ -253,7 +255,7 @@ const SafetyPlanView = () => {
                 <h3>4. Trusted Friends & Family</h3>
               </div>
               <p className="section-instruction">People you can call or text for support or just to connect with during a hard time.</p>
-              
+
               <div className="contact-form">
                 <div className="form-fields">
                   <input
@@ -313,7 +315,7 @@ const SafetyPlanView = () => {
                 <h3>5. Making Your Environment Safe</h3>
               </div>
               <p className="section-instruction">Steps you can take to make your immediate surroundings feel safer (e.g., removing triggering items).</p>
-              
+
               <div className="input-row">
                 <input
                   type="text"
@@ -349,7 +351,7 @@ const SafetyPlanView = () => {
                 <h3>6. Professional Support Contacts</h3>
               </div>
               <p className="section-instruction">Clinicians, doctors, counselors, or local support lines you can reach out to.</p>
-              
+
               <div className="contact-form">
                 <div className="form-fields">
                   <input
