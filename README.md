@@ -1,6 +1,6 @@
 # Nereid — AI Companion & Mental Wellness Chat
 
-A production-grade, AI-powered mental wellness companion designed for emotionally intelligent, real-time conversational support. Features compassionate multi-turn dialogue using local Ollama LLMs, real-time emotional sentiment classification with urgency triage, multi-session chat persistence with localStorage, interactive guided breathing exercises, mood analytics with custom SVG trend charts, a curated self-care resource library with crisis helplines, modern glassmorphism UI, and a fully responsive collapsible sidebar with Lucide icon navigation.
+A production-grade, AI-powered mental wellness companion designed for emotionally intelligent, real-time conversational support. Features compassionate multi-turn dialogue using local Ollama LLMs, real-time emotional sentiment classification with urgency triage, multi-session chat persistence with localStorage, interactive guided breathing exercises, mood analytics with custom SVG trend charts, a curated self-care resource library with crisis helplines, an inline crisis-escalation flow with a personal safety plan builder, a configurable check-in nudge system, a slide-out safety plan drawer, modern glassmorphism UI, and a fully responsive collapsible sidebar with Lucide icon navigation.
 
 ## Features
 
@@ -20,6 +20,13 @@ A production-grade, AI-powered mental wellness companion designed for emotionall
 - **Keyword Sentiment Fallback**: A zero-dependency, latency-free local classifier handles emotional routing when the Ollama model is offline or slow — detecting crisis language, high distress, moderate anxiety, sadness, sleep issues, and professional help-seeking patterns via keyword heuristics.
 - **Collapsible Sidebar**: Smooth `cubic-bezier` animated sidebar with icon-only collapsed mode. Includes a recent chats list with hover-reveal delete controls, active session highlighting, and full Lucide React icon integration.
 
+### Safety & Crisis Handling
+- **Inline Crisis-Escalation Card**: When a user message is classified with `urgency: high` or `urgency: immediate`, a dedicated crisis card is automatically injected directly into the chat thread — below the assistant reply and without interrupting the conversation flow. The card displays 988 (Lifeline) and Crisis Text Line (741741), a "View My Safety Plan" button, and a calm, non-clinical one-line introduction. A debounce guard prevents duplicate cards from stacking across consecutive high-urgency messages.
+- **Personal Safety Plan Builder**: A full six-section interactive form (accessible via the "Safety Plan" sidebar tab) following the standard clinical safety plan template — Warning Signs, Internal Coping Strategies, Positive Distractions & Environments, Trusted Friends & Family (with callable phone links), Safe Environment Steps, and Professional Support Contacts. All data is stored 100% locally in `localStorage` — no cloud sync, no data sharing.
+- **Slide-Out Safety Plan Drawer**: Accessible via the "View My Safety Plan" button on the crisis card, a smooth animated side-drawer opens on top of the chat without navigating away. It displays a read-only snapshot of coping steps, contacts, and callable numbers. If no plan exists yet, a prompt guides the user to create one.
+- **Configurable Check-in Nudge System**: After a high-urgency distress spike, a gentle check-in nudge is automatically scheduled using a client-side timer. If the user goes quiet for a configurable duration (default: 5 minutes), a local canned nudge message appears in the chat with zero-friction dismiss buttons ("I'm okay" / "Keep talking"). On app re-open or tab focus, a foreground checker re-evaluates pending escalation events and injects any overdue nudges. The nudge can be toggled off entirely or adjusted (timer duration, custom message text) in the Safety Plan settings panel.
+- **Escalation Event Logging**: Every crisis card trigger logs an `EscalationEvent` to `localStorage`, tracking session ID, urgency level, trigger timestamp, dismissed state, and check-in status — powering accurate nudge scheduling and avoiding repeat nudges after dismissal.
+
 ---
 
 ## Tech Stack
@@ -36,8 +43,9 @@ A production-grade, AI-powered mental wellness companion designed for emotionall
 - **Axios** for API communication with the FastAPI backend.
 - **Lucide React** for clean, consistent vector icon system.
 - **Vanilla CSS** with custom CSS variables for the dark glassmorphism design system.
-- **localStorage API** for client-side session and message persistence.
+- **localStorage API** for client-side session, message, safety plan, and escalation event persistence.
 - **Custom SVG Charts**: Hand-crafted Bézier curve line charts and progress bar analytics — no external charting libraries.
+- **Client-side Safety Engine**: Timer-based check-in nudge scheduler, foreground focus event listener, debounced escalation guard — all without any server-side push infrastructure.
 
 ---
 
@@ -92,8 +100,12 @@ nereid-therapist/
 │   │   ├── Home.css
 │   │   ├── Sidebar.js              # Collapsible nav with Lucide icons & recent chats
 │   │   ├── Sidebar.css
-│   │   ├── Chat.js                 # Multi-turn chat interface
+│   │   ├── Chat.js                 # Multi-turn chat + inline crisis cards + check-in nudge
 │   │   ├── Chat.css
+│   │   ├── SafetyPlanView.js       # 6-section safety plan builder + nudge settings
+│   │   ├── SafetyPlanView.css
+│   │   ├── SafetyPlanDrawer.js     # Slide-out read-only safety plan overlay
+│   │   ├── SafetyPlanDrawer.css
 │   │   ├── MessageInput.js         # Auto-resizing textarea input
 │   │   ├── MessageInput.css
 │   │   ├── HistoryView.js          # Past sessions dashboard with search
@@ -102,7 +114,9 @@ nereid-therapist/
 │   │   ├── Resources.css
 │   │   ├── Insights.js             # SVG mood charts + analytics
 │   │   └── Insights.css
-│   ├── App.js                      # Root state: multi-chat, tab routing, localStorage
+│   ├── utils/
+│   │   └── safetyStorage.js        # localStorage helpers: SafetyPlan, EscalationEvent, CheckInSettings
+│   ├── App.js                      # Root state: multi-chat, tab routing, foreground nudge checker
 │   ├── App.css
 │   ├── index.js
 │   └── index.css                   # Global design tokens & dark theme variables
@@ -234,6 +248,22 @@ MODEL = "llama3.2:latest"  # Replace with any Ollama-supported model
 | `Error communicating with AI model` | Ensure `ollama serve` is running and the model is pulled |
 | Model not found | Run `ollama list` and pull with `ollama pull llama3.2:latest` |
 | CORS errors in browser | Verify `allow_origins` in `api_server.py` includes `http://localhost:3000` |
+| Safety plan not saving | Check browser localStorage permissions; private/incognito mode may block writes |
+| Crisis card not appearing | Confirm the backend is running and returning `analysis.urgency` in its response |
+| Check-in nudge not firing | Verify the Safety Plan settings have "Enable Check-in Nudge" toggled on and the threshold set |
+
+---
+
+## Safety & Privacy
+
+Nereid is a **local-first** application — all data stays on your device:
+
+- **Conversation history** is persisted in `localStorage` under the key `nereid_chats`.
+- **Safety plan data** (including trusted contact names and phone numbers) is stored under `nereid_safety_plan` — it is never transmitted to any server.
+- **Escalation events** are logged locally under `nereid_escalation_events` for nudge scheduling and are not used for model training or analytics.
+- **No account, no cloud, no telemetry.** Clearing your browser's site data will erase all stored information.
+
+> Nereid is a supportive tool, not a clinical service. In an emergency, please contact your local crisis line or emergency services.
 
 ---
 
