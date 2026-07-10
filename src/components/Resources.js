@@ -9,11 +9,11 @@ const SELF_CARE_TIPS = [
     category: 'Anxiety relief',
     description: 'A technique to bring you back to the present moment when feeling overwhelmed.',
     steps: [
-      '👀 Look at 5 things around you.',
-      '✋ Touch 4 things nearby.',
-      '👂 Listen for 3 distinct sounds.',
-      '👃 Identify 2 scents in the air.',
-      '👅 Notice 1 taste in your mouth.'
+      ' Look at 5 things around you.',
+      ' Touch 4 things nearby.',
+      ' Listen for 3 distinct sounds.',
+      ' Identify 2 scents in the air.',
+      ' Notice 1 taste in your mouth.'
     ]
   },
   {
@@ -22,11 +22,11 @@ const SELF_CARE_TIPS = [
     category: 'Wellbeing',
     description: 'Calming habits to prepare your mind and body for restorative rest.',
     steps: [
-      '📵 Shut off screens 45 minutes before bed.',
-      '☕ Avoid caffeine after 2:00 PM.',
-      '🌡️ Keep your sleeping area cool and dark.',
-      '🧘 Do a 5-minute wind-down stretch.',
-      '⏰ Sleep and wake at consistent times.'
+      ' Shut off screens 45 minutes before bed.',
+      ' Avoid caffeine after 2:00 PM.',
+      ' Keep your sleeping area cool and dark.',
+      ' Do a 5-minute wind-down stretch.',
+      ' Sleep and wake at consistent times.'
     ]
   },
   {
@@ -35,10 +35,10 @@ const SELF_CARE_TIPS = [
     category: 'Self-Reflection',
     description: 'Prompts to help clarify your thoughts and process emotional blocks.',
     steps: [
-      '📝 "What is one thing that felt heavy today, and why?"',
-      '📝 "List three small moments of comfort you noticed recently."',
-      '📝 "If my anxiety were a character, what would it be trying to protect me from?"',
-      '📝 "What is a promise I want to make to myself for tomorrow?"'
+      ' "What is one thing that felt heavy today, and why?"',
+      ' "List three small moments of comfort you noticed recently."',
+      ' "If my anxiety were a character, what would it be trying to protect me from?"',
+      ' "What is a promise I want to make to myself for tomorrow?"'
     ]
   }
 ];
@@ -127,7 +127,7 @@ const Resources = () => {
       <div className="resources-content">
         {/* Left Column: Breathing and Crisis */}
         <div className="resources-left">
-          
+
           {/* Breathing Exercise Card */}
           <div className="resource-card breathing-card">
             <div className="card-header-icon">
@@ -135,10 +135,10 @@ const Resources = () => {
               <h2>Guided Calming Breath</h2>
             </div>
             <p className="card-desc">Practice box breathing to quiet your nervous system and reduce acute anxiety.</p>
-            
+
             <div className="breathing-exercise-wrap">
-              <div 
-                className={`breathing-circle ${breathingState}`} 
+              <div
+                className={`breathing-circle ${breathingState}`}
                 onClick={toggleBreathing}
               >
                 <div className="breathing-inner-circle">
@@ -159,7 +159,7 @@ const Resources = () => {
               <h2>Emergency & Crisis Support</h2>
             </div>
             <p className="card-desc">If you are in distress or experiencing thoughts of self-harm, please reach out. You are not alone.</p>
-            
+
             <div className="crisis-channels">
               <div className="crisis-item">
                 <div className="crisis-icon-wrap">
@@ -200,7 +200,7 @@ const Resources = () => {
 
         {/* Right Column: Guides and Articles */}
         <div className="resources-right">
-          
+
           <div className="resource-card search-tips-card">
             <div className="search-wrap">
               <input

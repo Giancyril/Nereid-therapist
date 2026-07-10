@@ -6,7 +6,7 @@
   border-right: 1px solid var(--driftwood-soft);
   display: flex;
   flex-direction: column;
-  transition: width 0.25s cubic-bezier(.4, 0, .2, 1), min-width 0.25s cubic-bezier(.4, 0, .2, 1);
+  transition: width 0.28s cubic-bezier(.4, 0, .2, 1), min-width 0.28s cubic-bezier(.4, 0, .2, 1);
   overflow: hidden;
   position: relative;
   z-index: 10;
@@ -22,11 +22,11 @@
   height: 68px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   padding: 0 14px;
   border-bottom: 1px solid var(--driftwood-soft);
-  gap: 8px;
   box-sizing: border-box;
+  transition: padding 0.28s ease;
 }
 
 .logo-container {
@@ -35,6 +35,18 @@
   gap: 10px;
   overflow: hidden;
   flex: 1;
+  margin-right: 8px;
+  max-width: 400px;
+  opacity: 1;
+  transition: max-width 0.28s cubic-bezier(.4, 0, .2, 1), opacity 0.18s ease, margin-right 0.28s cubic-bezier(.4, 0, .2, 1);
+}
+
+.sidebar.collapsed .logo-container {
+  flex: none;
+  max-width: 0;
+  margin-right: 0;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .logo-icon-wrap {
@@ -61,13 +73,6 @@
   color: var(--tide);
   letter-spacing: -0.2px;
   white-space: nowrap;
-  opacity: 1;
-  transition: opacity 0.2s;
-}
-
-.sidebar.collapsed .logo-text {
-  opacity: 0;
-  width: 0;
 }
 
 .collapse-btn {
@@ -82,7 +87,7 @@
   align-items: center;
   justify-content: center;
   font-size: 13px;
-  transition: background 0.15s, color 0.15s;
+  transition: background 0.15s, color 0.15s, transform 0.28s cubic-bezier(.4, 0, .2, 1);
   flex-shrink: 0;
 }
 
@@ -105,11 +110,13 @@
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 8px;
-  transition: background 0.15s, transform 0.15s, box-shadow 0.15s;
+  justify-content: center;
+  cursor: pointer;
   white-space: nowrap;
   overflow: hidden;
   box-shadow: 0 2px 10px -2px rgba(44, 83, 75, 0.4);
+  transition: background 0.15s, transform 0.15s, box-shadow 0.15s,
+    width 0.28s cubic-bezier(.4, 0, .2, 1), border-radius 0.28s ease, padding 0.28s ease;
 }
 
 .new-chat-btn:hover {
@@ -127,13 +134,25 @@
 
 .new-chat-btn .btn-label {
   opacity: 1;
-  transition: opacity 0.2s;
+  max-width: 160px;
+  margin-left: 8px;
+  overflow: hidden;
+  white-space: nowrap;
+  transition: opacity 0.18s ease, max-width 0.28s cubic-bezier(.4, 0, .2, 1), margin-left 0.28s cubic-bezier(.4, 0, .2, 1);
+}
+
+.sidebar.collapsed .new-chat-btn {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border-radius: 50%;
+  margin: 12px auto;
 }
 
 .sidebar.collapsed .btn-label {
   opacity: 0;
-  width: 0;
-  overflow: hidden;
+  max-width: 0;
+  margin-left: 0;
 }
 
 /* ── Nav ── */
@@ -147,11 +166,11 @@
 .nav-item {
   display: flex;
   align-items: center;
-  gap: 10px;
+  justify-content: flex-start;
   padding: 9px 10px;
   border-radius: var(--r-md);
   cursor: pointer;
-  transition: background 0.15s, color 0.15s;
+  transition: background 0.15s, color 0.15s, justify-content 0s;
   color: var(--tide-soft);
   font-size: 13.5px;
   font-weight: 500;
@@ -159,6 +178,11 @@
   overflow: hidden;
   user-select: none;
   position: relative;
+}
+
+.sidebar.collapsed .nav-item {
+  justify-content: center;
+  padding: 9px 0;
 }
 
 .nav-item:hover {
@@ -181,6 +205,11 @@
   width: 3px;
   border-radius: var(--r-pill);
   background: var(--current);
+  transition: left 0.28s cubic-bezier(.4, 0, .2, 1);
+}
+
+.sidebar.collapsed .nav-item.active::before {
+  left: 0;
 }
 
 .nav-icon-wrap {
@@ -206,14 +235,17 @@
 
 .nav-label {
   opacity: 1;
-  transition: opacity 0.2s;
+  max-width: 140px;
+  margin-left: 10px;
+  overflow: hidden;
   font-size: 13.5px;
+  transition: opacity 0.18s ease, max-width 0.28s cubic-bezier(.4, 0, .2, 1), margin-left 0.28s cubic-bezier(.4, 0, .2, 1);
 }
 
 .sidebar.collapsed .nav-label {
   opacity: 0;
-  width: 0;
-  overflow: hidden;
+  max-width: 0;
+  margin-left: 0;
 }
 
 /* ── Recent Chats ── */
@@ -225,6 +257,7 @@
   padding: 16px 8px 6px;
   border-top: 1px solid var(--driftwood-soft);
   margin-top: 8px;
+  transition: opacity 0.15s ease;
 }
 
 .recent-chats-title {
@@ -311,6 +344,15 @@
   background: var(--coral-soft);
 }
 
+.sidebar.collapsed .recent-chats-container {
+  opacity: 0;
+  pointer-events: none;
+  max-height: 0;
+  padding: 0 8px;
+  margin-top: 0;
+  border-top: none;
+}
+
 /* ── Footer ── */
 .sidebar-footer {
   padding: 10px 8px 14px;
@@ -320,12 +362,16 @@
 .sidebar-user {
   display: flex;
   align-items: center;
-  gap: 10px;
   padding: 8px 10px;
   border-radius: var(--r-md);
   cursor: pointer;
   transition: background 0.15s;
   overflow: hidden;
+}
+
+.sidebar.collapsed .sidebar-user {
+  justify-content: center;
+  padding: 8px 0;
 }
 
 .sidebar-user:hover {
@@ -348,6 +394,10 @@
 
 .user-info {
   overflow: hidden;
+  max-width: 160px;
+  margin-left: 10px;
+  opacity: 1;
+  transition: opacity 0.18s ease, max-width 0.28s cubic-bezier(.4, 0, .2, 1), margin-left 0.28s cubic-bezier(.4, 0, .2, 1);
 }
 
 .user-name {
@@ -365,10 +415,72 @@
 
 .sidebar.collapsed .user-info {
   opacity: 0;
-  width: 0;
-  overflow: hidden;
+  max-width: 0;
+  margin-left: 0;
 }
 
-.sidebar.collapsed .recent-chats-container {
-  display: none;
+/* ── Back-to-Home Button ── */
+.back-home-btn {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: calc(100% - 16px);
+  margin: 0 8px 8px;
+  padding: 8px 10px;
+  background: transparent;
+  border: 1px solid var(--driftwood-soft);
+  border-radius: var(--r-md);
+  color: var(--tide-soft);
+  font-family: var(--font-body);
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  transition: background 0.15s, color 0.15s, border-color 0.15s,
+    width 0.28s cubic-bezier(.4, 0, .2, 1), border-radius 0.28s ease,
+    margin 0.28s ease, padding 0.28s ease;
+}
+
+.back-home-btn:hover {
+  background: var(--current-softer);
+  color: var(--current-deep);
+  border-color: var(--current);
+}
+
+.back-home-btn svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.back-home-label {
+  opacity: 1;
+  max-width: 120px;
+  margin-left: 8px;
+  overflow: hidden;
+  transition: opacity 0.18s ease, max-width 0.28s cubic-bezier(.4, 0, .2, 1), margin-left 0.28s cubic-bezier(.4, 0, .2, 1);
+}
+
+.sidebar.collapsed .back-home-btn {
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: transparent;
+  border-radius: 50%;
+  margin: 0 auto 8px;
+  padding: 0;
+}
+
+.sidebar.collapsed .back-home-btn:hover {
+  background: var(--current-softer);
+  color: var(--current-deep);
+}
+
+.sidebar.collapsed .back-home-label {
+  opacity: 0;
+  max-width: 0;
+  margin-left: 0;
+  pointer-events: none;
 }

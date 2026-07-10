@@ -1,5 +1,5 @@
 import React from 'react';
-import { MessageSquare, History, BookOpen, BarChart2, ChevronLeft, ChevronRight, Plus, Trash2, Shield, BookMarked, User } from 'lucide-react';
+import { MessageSquare, History, BookOpen, BarChart2, ChevronLeft, ChevronRight, Plus, Trash2, Shield, BookMarked, User, Home } from 'lucide-react';
 import './Sidebar.css';
 
 const NereidIcon = () => (
@@ -36,7 +36,8 @@ const Sidebar = ({
   currentChatId,
   onSelectChat,
   onDeleteChat,
-  onNewChat
+  onNewChat,
+  onGoHome
 }) => {
 
   const navItems = [
@@ -122,6 +123,17 @@ const Sidebar = ({
 
       {/* ── Footer / User ── */}
       <div className="sidebar-footer">
+        {/* Back to Home */}
+        {onGoHome && (
+          <button
+            className="back-home-btn"
+            onClick={onGoHome}
+            title="Back to Home"
+          >
+            <Home size={15} />
+            <span className="back-home-label">Back to Home</span>
+          </button>
+        )}
         <div className="sidebar-user">
           <div className="user-avatar">N</div>
           <div className="user-info">

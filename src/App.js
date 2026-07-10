@@ -263,6 +263,7 @@ function App() {
         onSelectChat={setCurrentChatId}
         onDeleteChat={handleDeleteChat}
         onNewChat={handleNewChat}
+        onGoHome={() => setView('landing')}
       />
       <div className="main-content">
         {renderMainContent()}
