@@ -74,9 +74,9 @@ const Home = ({ onEnterDashboard, onStartChat }) => {
             <span className="landing-logo-text">Nereid</span>
           </div>
           <div className="landing-nav-links">
-            <button className="landing-nav-link" onClick={() => document.getElementById('landing-features').scrollIntoView({ behavior: 'smooth' })}>How it works</button>
-            <button className="landing-nav-link" onClick={() => document.getElementById('landing-approach').scrollIntoView({ behavior: 'smooth' })}>Our approach</button>
-            <button className="landing-nav-link" onClick={() => document.getElementById('landing-safety').scrollIntoView({ behavior: 'smooth' })}>Support</button>
+            <button className="landing-nav-link" onClick={() => document.getElementById('landing-features')?.scrollIntoView({ behavior: 'smooth' })}>How it works</button>
+            <button className="landing-nav-link" onClick={() => document.getElementById('landing-approach')?.scrollIntoView({ behavior: 'smooth' })}>Our approach</button>
+            <button className="landing-nav-link" onClick={() => document.getElementById('landing-safety')?.scrollIntoView({ behavior: 'smooth' })}>Support</button>
           </div>
           <button className="landing-nav-cta" onClick={onEnterDashboard} id="landing-open-app-btn">
             Open Nereid <ArrowRight size={15} />
@@ -224,7 +224,7 @@ const Home = ({ onEnterDashboard, onStartChat }) => {
       </section>
 
       {/* ── CTA BANNER ───────────────────────────────────────────────── */}
-      <section className="landing-cta-banner">
+      <section className="landing-cta-banner" id="landing-safety">
         <div className="landing-section-inner">
           <div className="cta-banner-card">
             <div className="cta-banner-bg" aria-hidden="true" />

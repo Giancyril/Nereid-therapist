@@ -39,9 +39,9 @@ const CATEGORIES = [
 ];
 
 const STYLE_OPTIONS = [
-  { id: 'reflective', label: '🌱 Reflective Listening', desc: 'Validates feelings, avoids advising' },
-  { id: 'cbt', label: '🔍 CBT Reframing', desc: 'Gently reframes cognitive distortions' },
-  { id: 'venting', label: '💨 Venting / No Advice', desc: 'Just hears you out' },
+  { id: 'reflective', label: ' Reflective Listening', desc: 'Validates feelings, avoids advising' },
+  { id: 'cbt', label: ' CBT Reframing', desc: 'Gently reframes cognitive distortions' },
+  { id: 'venting', label: ' Venting / No Advice', desc: 'Just hears you out' },
 ];
 
 const ProfileView = () => {
@@ -114,6 +114,7 @@ const ProfileView = () => {
       {/* ── Header ── */}
       <div className="profile-header">
         <div className="profile-title-wrap">
+          <User size={20} className="profile-header-icon" />
           <div>
             <div className="profile-title">Memory Profile</div>
             <div className="profile-subtitle">What Nereid remembers about you</div>
@@ -138,7 +139,7 @@ const ProfileView = () => {
           <div className="profile-privacy-banner">
             <Info size={16} className="banner-icon" />
             <div className="banner-text">
-              <strong>Your memory profile is 100% private.</strong> Nereid builds this from your conversations to provide more personalised support. All data stays on this device — it's never sent to any server or shared.
+              <strong>Your memory profile is 100% private.</strong> Nereid builds this from your conversations to provide more personalised support. All data stays on this device it's never sent to any server or shared.
             </div>
             <button
               className="banner-dismiss"
