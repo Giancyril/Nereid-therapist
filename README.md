@@ -1,6 +1,6 @@
 # Nereid — AI Companion & Mental Wellness Chat
 
-A production-grade, AI-powered mental wellness companion designed for emotionally intelligent, real-time conversational support. Features compassionate multi-turn dialogue using local Ollama LLMs, real-time emotional sentiment classification with urgency triage, multi-session chat persistence, a personal safety plan builder, a private journaling mode, cross-session memory profiling, voice input/output, selectable conversation styles, mood analytics, and a curated self-care resource library — all running 100% locally with no cloud dependencies.
+A production-grade, AI-powered mental wellness companion designed for emotionally intelligent, real-time conversational support. Features compassionate multi-turn dialogue using local Ollama LLMs, real-time emotional sentiment classification with urgency triage, multi-session chat persistence, a personal safety plan builder, a private journaling mode, cross-session memory profiling, voice input/output, selectable conversation styles, mood analytics with weekly digests and time-pattern correlation, exportable mood reports, a full theming system, custom browser reminders, and an adjustable AI personality slider — all running 100% locally with no cloud dependencies.
 
 ## Features
 
@@ -8,8 +8,8 @@ A production-grade, AI-powered mental wellness companion designed for emotionall
 - **AI Conversational Support**: Multi-turn compassionate dialogue powered by `llama3.2:latest` via Ollama. Maintains full conversation history for contextually aware responses.
 - **Emotional Sentiment Triage**: Every user message is classified in real-time by a dual-layer classifier — Ollama-based zero-shot intent detection with a keyword-matching fallback — producing structured `emotional_state`, `urgency`, `intent`, and `topics` metadata.
 - **Multi-Session Chat Management**: Create, switch, rename, and delete multiple independent conversation sessions. Session titles are auto-generated from the first user message.
-- **LocalStorage Persistence**: All conversations, journal entries, safety plan data, and memory profiles are automatically persisted to the browser's `localStorage`, surviving page refreshes and tab closures.
-- **Tab-Based Navigation**: Seven sidebar tabs — Chat, Journal, History, Safety Plan, Resources, Insights, My Profile — each rendering a dedicated view within the same layout shell.
+- **LocalStorage Persistence**: All conversations, journal entries, safety plan data, memory profiles, themes, reminders, and warmth settings are automatically persisted to `localStorage`, surviving page refreshes and tab closures.
+- **Tab-Based Navigation**: Eight sidebar tabs — Chat, Journal, History, Safety Plan, Resources, Insights, My Profile, **Settings** — each rendering a dedicated view within the same layout shell.
 
 ---
 
@@ -74,10 +74,76 @@ A distraction-free **Journal** tab for private text entries:
 ---
 
 ### Analytics & Resources
-- **Mood & Insights Analytics**: The Insights tab renders live emotional analysis from accumulated chat and journal history — including an animated SVG Bézier line chart tracking distress trends, topic bar charts, mood distribution bars, and a wellbeing advice card. Filterable by Chat / Journal / All.
-- **Guided Box Breathing Bubble**: An animated breathing exercise component on the Resources tab (Inhale → Hold → Exhale → Hold Empty) driven by CSS keyframe transforms.
+
+#### Insights Dashboard
+The **Insights** tab delivers a full emotional analytics suite, updated live from accumulated chat and journal history:
+
+- **Animated SVG Trend Chart** — Bézier curve line chart tracking distress intensity over the last 10 inputs, with distinct markers for Chat vs. Journal sources.
+- **Mood Distribution Bars** — percentage breakdown of all detected moods.
+- **Discussion Topic Frequency** — bar chart of recurring topics identified by the classifier.
+- **Wellbeing Advice Card** — contextual coping suggestion based on the dominant mood.
+
+#### Weekly / Monthly Digest *(new)*
+- A **Digest card** at the top of Insights shows a rolling summary for the selected period (last 7 or 30 days):
+  - Total check-in count for the period.
+  - Average distress score with a **trend delta** vs. the prior period (e.g. ↓0.3 in green when improving).
+  - Primary mood detected this period.
+  - **Top 5 topics** mentioned, each with a mention-count badge (e.g. "Work Stress ×4").
+- Toggle between **Week** and **Month** with a pill switcher.
+
+#### Time-Pattern Correlation *(new)*
+Two new charts correlate mood/distress with time:
+
+- **Mood by Time of Day** — animated horizontal bars for Morning 🌅 / Afternoon ☀️ / Evening 🌇 / Night 🌙, showing average distress per bucket. Each slot has a distinct colour gradient.
+- **Mood by Day of Week** — animated vertical bar chart (Mon → Sun) showing average distress height per day — surfaces patterns like "Mondays are consistently harder".
+
+#### Export *(new)*
+- **CSV Export** — one-click download of all mood data as a clean `.csv` file (columns: Date, Time, Source, Mood, Urgency, Topics, Distress Level). Ready to open in Excel or share with a therapist.
+- **PDF Export** — triggers the browser print dialog with a clean print stylesheet (controls hidden, cards formatted for A4). Save as PDF directly from any browser.
+
+#### Resources
+- **Guided Box Breathing Bubble**: An animated breathing exercise (Inhale → Hold → Exhale → Hold Empty) driven by CSS keyframe transforms.
 - **Reflection History Dashboard**: Searchable grid of all past chat sessions with mood tag pills, last message preview, and one-click resume.
 - **Crisis & Self-Help Resources**: Searchable library of evidence-based self-care exercises alongside crisis hotlines (988, Crisis Text Line, international locator).
+
+---
+
+### Personalization *(new)*
+
+A dedicated **Settings** tab (gear icon in the sidebar) provides three sections:
+
+#### Theme Picker
+Choose from 4 built-in colour themes that restyle the entire application instantly via CSS custom property overrides:
+
+| Theme | Feel |
+|---|---|
+| 🌊 **Dark Tide** *(default)* | Sea-mist surfaces, deep teal ink — the original design |
+| ☀️ **Light Warm** | Warm sand backgrounds with earthy amber accents |
+| 🔵 **Ocean Depth** | Full dark mode — deep navy with bright cyan highlights |
+| 🌸 **Lavender Dusk** | Deep purple-grey surfaces with warm lilac accents |
+
+Theme is stored in `nereid_theme` and applied on every app load via a `data-theme` attribute on `<html>`.
+
+#### AI Personality — Warmth / Formality Slider
+A 5-point slider adjusts Nereid's conversational register between **Warm & Casual** and **Calm & Formal**:
+
+| Level | Style |
+|---|---|
+| 1 | Warm & Casual — like a trusted friend; informal, gentle humour |
+| 2 | Warm & Gentle — caring and approachable |
+| 3 | Calm & Balanced *(default)* — warm yet composed |
+| 4 | Measured & Thoughtful — clear, slightly professional |
+| 5 | Calm & Formal — composed and professional, never cold |
+
+The selected level is sent as a `warmth` field in every `/api/chat` request. The backend injects a `WARMTH_PROMPTS[level]` tone fragment into the system prompt alongside the conversation style fragment. Stored in `nereid_warmth`.
+
+#### Custom Reminders
+Set up to as many gentle nudges as you like using the browser Notification API:
+- Choose a reminder **type**: Breathing Exercise 🌬️, Journal Entry ✍️, or Custom 💙.
+- Set a **time** (HH:MM) and select **days of the week** (Mon–Sun pill buttons).
+- Reminders are scheduled via `setTimeout` chains on app load — they fire while the app tab is open.
+- **Notification permission** flow with grant / deny / unsupported banners and a **Send test** button.
+- All reminder configs stored in `nereid_reminders`.
 
 ---
 
@@ -95,10 +161,13 @@ A distraction-free **Journal** tab for private text entries:
 - **React 18** with functional components and hooks.
 - **Axios** for API communication.
 - **Lucide React** for clean, consistent vector icons.
-- **Vanilla CSS** with custom CSS variables for the dark glassmorphism design system.
-- **localStorage API** for all client-side persistence (sessions, journal, safety plan, memory profile, TTS settings).
+- **Vanilla CSS** with custom CSS variables for the design system; **4-theme system** via `data-theme` CSS variable overrides (no extra library).
+- **localStorage API** for all client-side persistence (sessions, journal, safety plan, memory profile, TTS settings, theme, warmth, reminders).
 - **Web Speech API**: `SpeechRecognition` for voice input; `speechSynthesis` for voice output.
-- **Custom SVG Charts**: Hand-crafted Bézier curve line charts and progress bar analytics — no external charting libraries.
+- **Notification API**: Browser push notifications for custom reminder scheduling via `setTimeout` chains.
+- **Custom SVG Charts**: Hand-crafted Bézier curve line charts, horizontal time-of-day bars, and vertical day-of-week bars — no external charting libraries.
+- **CSV Export**: Pure browser `Blob` + `URL.createObjectURL` — no server needed.
+- **Print-to-PDF**: `window.print()` with a `@media print` CSS stylesheet.
 - **Client-side Safety Engine**: Timer-based nudge scheduler, debounced escalation guard, foreground focus event listener.
 
 ---
