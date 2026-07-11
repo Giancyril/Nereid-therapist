@@ -77,14 +77,23 @@ const Sidebar = ({
       </button>
 
       {/* ── Navigation ── */}
-      <nav className="sidebar-nav">
+      <nav className="sidebar-nav" role="tablist" aria-label="Main Navigation">
         {navItems.map(item => (
           <div
             key={item.id}
             className={`nav-item ${activeTab === item.id ? 'active' : ''}`}
             onClick={() => onSelectTab(item.id)}
+            role="tab"
+            tabIndex={0}
+            aria-selected={activeTab === item.id}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                onSelectTab(item.id);
+              }
+            }}
           >
-            <div className="nav-icon-wrap">{item.icon}</div>
+            <div className="nav-icon-wrap" aria-hidden="true">{item.icon}</div>
             <span className="nav-label">{item.label}</span>
           </div>
         ))}
@@ -94,7 +103,7 @@ const Sidebar = ({
       {!collapsed && chats.length > 0 && (
         <div className="recent-chats-container">
           <div className="recent-chats-title">Recent Chats</div>
-          <div className="recent-chats-list">
+          <div className="recent-chats-list" role="group" aria-label="Recent chats list">
             {chats.map(chat => (
               <div
                 key={chat.id}
@@ -103,8 +112,18 @@ const Sidebar = ({
                   onSelectChat(chat.id);
                   onSelectTab('chat');
                 }}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    onSelectChat(chat.id);
+                    onSelectTab('chat');
+                  }
+                }}
+                aria-label={`Resume conversation: ${chat.title || 'Reflections Chat'}`}
               >
-                <MessageSquare size={13} className="chat-item-icon" />
+                <MessageSquare size={13} className="chat-item-icon" aria-hidden="true" />
                 <span className="chat-item-title">{chat.title || 'Reflections Chat'}</span>
                 <button
                   className="chat-item-delete"
@@ -113,8 +132,9 @@ const Sidebar = ({
                     onDeleteChat(chat.id);
                   }}
                   title="Delete conversation"
+                  aria-label={`Delete conversation: ${chat.title || 'Reflections Chat'}`}
                 >
-                  <Trash2 size={14} />
+                  <Trash2 size={14} aria-hidden="true" />
                 </button>
               </div>
             ))}

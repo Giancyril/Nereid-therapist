@@ -49,3 +49,25 @@ export const setTheme = (id) => {
 export const applyTheme = (id) => {
   document.documentElement.setAttribute('data-theme', id || 'dark-tide');
 };
+
+const REDUCED_MOTION_KEY = 'nereid_reduced_motion';
+
+/** Returns true if reduced motion is enabled manually by user. */
+export const getReducedMotion = () =>
+  localStorage.getItem(REDUCED_MOTION_KEY) === 'true';
+
+/** Stores and immediately applies reduced motion. */
+export const setReducedMotion = (enabled) => {
+  localStorage.setItem(REDUCED_MOTION_KEY, enabled ? 'true' : 'false');
+  applyReducedMotion(enabled);
+};
+
+/** Applies reduced motion state by setting data-reduced-motion attribute on <html>. */
+export const applyReducedMotion = (enabled) => {
+  if (enabled) {
+    document.documentElement.setAttribute('data-reduced-motion', 'true');
+  } else {
+    document.documentElement.removeAttribute('data-reduced-motion');
+  }
+};
+

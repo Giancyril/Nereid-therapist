@@ -145,6 +145,21 @@ Set up to as many gentle nudges as you like using the browser Notification API:
 - **Notification permission** flow with grant / deny / unsupported banners and a **Send test** button.
 - All reminder configs stored in `nereid_reminders`.
 
+#### Reduced Motion Mode
+A manual toggle in Settings enables user-chosen animation reduction:
+- Instantly adds a `data-reduced-motion="true"` attribute to `<html>`.
+- Zeroes all transition and animation durations app-wide (such as the Guided Box Breathing scale effect, floating landing page cards, and pulse cues) through matching global styles.
+- Complements standard system-level `@media (prefers-reduced-motion: reduce)` preferences.
+
+---
+
+### Accessibility & Semantics *(new)*
+- **Full Keyboard Navigation**: Complete keyboard accessibility implemented across custom components. The main navigation tabs and recent chat lists in the Sidebar support focus outlines and `Enter`/`Space` key triggers.
+- **Accessible Data Visualizations**: The hand-crafted SVG line charts and time pattern bar graphs are fitted with screen-reader accessible elements:
+  - SVG elements carry semantic `role="img"` properties and descriptive `aria-label` summaries.
+  - Line chart coordinate points are keyboard-focusable (`tabIndex={0}`) with detail-rich descriptive labels (e.g. "Point 2: Chat message with Moderate Distress recorded at 3:45 PM").
+- **Live Screen-Reader Updates**: The Box Breathing bubble utilizes `aria-live="polite"` inside its text container to announce state changes dynamically (e.g. "Breathe In...", "Hold Breath...") to low-vision users.
+
 ---
 
 ## Tech Stack

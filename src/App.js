@@ -10,7 +10,7 @@ import JournalView from './components/JournalView';
 import ProfileView from './components/ProfileView';
 import SettingsView from './components/SettingsView';
 import { getSafetyPlan, getEscalationEvents, saveEscalationEvents } from './utils/safetyStorage';
-import { applyTheme, getTheme } from './utils/themeStorage';
+import { applyTheme, getTheme, applyReducedMotion, getReducedMotion } from './utils/themeStorage';
 import { scheduleReminders } from './utils/remindersStorage';
 import './App.css';
 
@@ -64,9 +64,10 @@ function App() {
     localStorage.setItem('nereid_current_chat_id', currentChatId);
   }, [currentChatId]);
 
-  // Apply saved theme and schedule reminders on first mount
+  // Apply saved theme, reduced motion, and schedule reminders on first mount
   useEffect(() => {
     applyTheme(getTheme());
+    applyReducedMotion(getReducedMotion());
     scheduleReminders();
   }, []);
 

@@ -140,13 +140,26 @@ const Resources = () => {
               <div
                 className={`breathing-circle ${breathingState}`}
                 onClick={toggleBreathing}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    toggleBreathing();
+                  }
+                }}
+                aria-label={`Guided box breathing bubble. Current state: ${getBreathingInstruction()}. ${breathingActive ? `Time remaining: ${countdown} seconds.` : 'Click to start box breathing.'}`}
               >
-                <div className="breathing-inner-circle">
+                <div className="breathing-inner-circle" aria-live="polite">
                   <span className="breathing-instruction">{getBreathingInstruction()}</span>
                   {breathingActive && <span className="breathing-timer">{countdown}s</span>}
                 </div>
               </div>
-              <button className={`breathing-btn ${breathingActive ? 'active' : ''}`} onClick={toggleBreathing}>
+              <button
+                className={`breathing-btn ${breathingActive ? 'active' : ''}`}
+                onClick={toggleBreathing}
+                aria-label={breathingActive ? 'Pause box breathing exercise' : 'Start guided box breathing exercise'}
+              >
                 {breathingActive ? 'Pause Exercise' : 'Start Box Breathing'}
               </button>
             </div>

@@ -538,7 +538,12 @@ const Insights = ({ chats = [] }) => {
             <div className="trend-chart-container">
               {trendData ? (
                 <div className="svg-chart-wrap">
-                  <svg viewBox="0 0 500 150" className="trend-svg">
+                  <svg
+                    viewBox="0 0 500 150"
+                    className="trend-svg"
+                    role="img"
+                    aria-label="Line chart showing your emotional distress trend over the last 10 entries. Use Tab to inspect individual points."
+                  >
                     <defs>
                       <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
                         <stop offset="0%" stopColor="#14b8a6" stopOpacity="0.25" />
@@ -553,15 +558,17 @@ const Insights = ({ chats = [] }) => {
                     <line x1="20" y1="130" x2="480" y2="130" stroke="rgba(255,255,255,0.06)" strokeWidth="1.5" />
 
                     {/* Gradient Area under line */}
-                    <path d={trendData.areaD} fill="url(#chartGradient)" />
+                    <path d={trendData.areaD} fill="url(#chartGradient)" aria-hidden="true" />
 
                     {/* Line path */}
-                    <path d={trendData.pathD} fill="none" stroke="#2dd4bf" strokeWidth="2.5" strokeLinecap="round" />
+                    <path d={trendData.pathD} fill="none" stroke="#2dd4bf" strokeWidth="2.5" strokeLinecap="round" aria-hidden="true" />
 
                     {/* Interactive dots */}
                     {trendData.xCoords.map((x, idx) => {
                       const pt = trendData.points[idx];
                       const strokeColor = pt.source === 'journal' ? 'var(--mood-anxious)' : '#2dd4bf';
+                      const distressLabels = ['Low / Calm', 'Moderate Distress', 'High Distress', 'Urgent Crisis'];
+                      const distressText = distressLabels[pt.level - 1] || `${pt.level} out of 4`;
                       return (
                         <circle
                           key={idx}
@@ -572,7 +579,14 @@ const Insights = ({ chats = [] }) => {
                           stroke={strokeColor}
                           strokeWidth="2.5"
                           className="trend-dot"
-                          title={`${pt.source.toUpperCase()}: level ${pt.level}`}
+                          role="img"
+                          tabIndex={0}
+                          aria-label={`Point ${idx + 1}: ${pt.source === 'journal' ? 'Journal entry' : 'Chat message'} with ${distressText} recorded at ${pt.time}`}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                              e.preventDefault();
+                            }
+                          }}
                         />
                       );
                     })}
@@ -630,13 +644,17 @@ const Insights = ({ chats = [] }) => {
         <div className="insights-charts-grid insights-time-grid">
 
           {/* Time of Day */}
-          <div className="insight-chart-card">
+          <div
+            className="insight-chart-card"
+            role="img"
+            aria-label={`Distress level by time of day: ${timeOfDayStats.map(b => `${b.label}: ${b.n > 0 ? b.avg.toFixed(1) + ' average distress' : 'no check-ins'}`).join(', ')}`}
+          >
             <div className="chart-header">
-              <span style={{ fontSize: 16 }}>⏰</span>
+              <span style={{ fontSize: 16 }} aria-hidden="true">⏰</span>
               <h3>Mood by Time of Day</h3>
             </div>
-            <p className="chart-desc">Average distress level per time slot (1 = calm, 4 = crisis).</p>
-            <div className="tod-bars">
+            <p className="chart-desc" aria-hidden="true">Average distress level per time slot (1 = calm, 4 = crisis).</p>
+            <div className="tod-bars" aria-hidden="true">
               {timeOfDayStats.map(b => (
                 <div key={b.key} className="tod-bar-row">
                   <span className="tod-label">{b.label}</span>
@@ -653,13 +671,17 @@ const Insights = ({ chats = [] }) => {
           </div>
 
           {/* Day of Week */}
-          <div className="insight-chart-card">
+          <div
+            className="insight-chart-card"
+            role="img"
+            aria-label={`Distress level by day of week: ${dayOfWeekStats.map(d => `${d.label}: ${d.n > 0 ? d.avg.toFixed(1) + ' average distress' : 'no check-ins'}`).join(', ')}`}
+          >
             <div className="chart-header">
-              <span style={{ fontSize: 16 }}>📅</span>
+              <span style={{ fontSize: 16 }} aria-hidden="true">📅</span>
               <h3>Mood by Day of Week</h3>
             </div>
-            <p className="chart-desc">Average distress per day. Taller bars = more distress recorded.</p>
-            <div className="dow-bars">
+            <p className="chart-desc" aria-hidden="true">Average distress per day. Taller bars = more distress recorded.</p>
+            <div className="dow-bars" aria-hidden="true">
               {dayOfWeekStats.map(d => (
                 <div key={d.label} className="dow-col">
                   <div className="dow-bar-wrap">

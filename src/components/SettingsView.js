@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { Bell, Palette, Sliders, Plus, Trash2, AlertCircle, CheckCircle, ChevronDown, ChevronUp } from 'lucide-react';
 import {
-  THEMES, getTheme, setTheme
+  THEMES, getTheme, setTheme, getReducedMotion, setReducedMotion
 } from '../utils/themeStorage';
 import {
   getReminders, addReminder, updateReminder, deleteReminder,
@@ -54,6 +54,7 @@ const SettingsView = () => {
   const [notifStatus, setNotifStatus] = useState(getNotificationStatus);
   const [addingReminder, setAddingReminder] = useState(false);
   const [testFired, setTestFired] = useState(false);
+  const [reducedMotion, setReducedMotionState] = useState(getReducedMotion);
 
   // Draft state for new reminder
   const [draft, setDraft] = useState({ type: 'breathing', label: '', time: '09:00', days: [0,1,2,3,4] });
@@ -63,6 +64,12 @@ const SettingsView = () => {
   const handleThemeSelect = (id) => {
     setTheme(id);
     setActiveTheme(id);
+  };
+
+  const handleReducedMotionChange = (e) => {
+    const checked = e.target.checked;
+    setReducedMotionState(checked);
+    setReducedMotion(checked);
   };
 
   // ── Warmth ─────────────────────────────────────────────────────────────────
@@ -148,6 +155,21 @@ const SettingsView = () => {
               )}
             </button>
           ))}
+        </div>
+        <div className="settings-motion-toggle-wrap">
+          <label className="reminder-toggle">
+            <input
+              type="checkbox"
+              checked={reducedMotion}
+              onChange={handleReducedMotionChange}
+              aria-label="Toggle Reduced Motion Mode"
+            />
+            <span className="toggle-track" />
+          </label>
+          <div className="settings-toggle-info">
+            <span className="settings-toggle-label">Reduced Motion Mode</span>
+            <span className="settings-toggle-desc">Minimizes UI transitions, box breathing scaling, and decorative animations.</span>
+          </div>
         </div>
       </Section>
 

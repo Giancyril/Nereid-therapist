@@ -566,3 +566,31 @@
   opacity: 0.4;
   cursor: not-allowed;
 }
+
+/* ── Reduced Motion Toggle ── */
+.settings-motion-toggle-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid var(--driftwood-soft);
+}
+
+.settings-toggle-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.settings-toggle-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--tide);
+}
+
+.settings-toggle-desc {
+  font-size: 11.5px;
+  color: var(--tide-soft);
+}
+
