@@ -1,0 +1,568 @@
+/* ─── SettingsView.css ──────────────────────────────────────────────────────
+   Styles for the Personalization settings hub: Appearance, AI Personality,
+   and Reminders sections.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+.settings-view {
+  height: 100%;
+  overflow-y: auto;
+  padding: 0 0 40px;
+  background: var(--mist);
+}
+
+/* ── Header ── */
+.settings-header {
+  padding: 28px 32px 20px;
+  border-bottom: 1px solid var(--driftwood-soft);
+  background: var(--surface);
+}
+
+.settings-header-title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--tide);
+  margin-bottom: 4px;
+}
+
+.settings-header-sub {
+  font-size: 13px;
+  color: var(--tide-soft);
+}
+
+/* ── Section wrapper ── */
+.settings-section {
+  margin: 16px 24px 0;
+  background: var(--surface);
+  border-radius: var(--r-lg);
+  border: 1px solid var(--driftwood-soft);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.settings-section-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 18px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--tide);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  text-align: left;
+  transition: background 0.15s;
+}
+
+.settings-section-header:hover {
+  background: var(--surface-2);
+}
+
+.settings-section-icon {
+  display: flex;
+  align-items: center;
+  color: var(--current);
+}
+
+.settings-section-title {
+  flex: 1;
+}
+
+.settings-section-body {
+  padding: 4px 18px 20px;
+  border-top: 1px solid var(--driftwood-soft);
+}
+
+.settings-desc {
+  font-size: 12.5px;
+  color: var(--tide-soft);
+  margin: 12px 0 16px;
+  line-height: 1.6;
+}
+
+/* ── Theme picker ── */
+.theme-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.theme-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  background: var(--surface-2);
+  border: 2px solid var(--driftwood-soft);
+  border-radius: var(--r-md);
+  cursor: pointer;
+  transition: border-color 0.18s, box-shadow 0.18s, transform 0.12s;
+  text-align: left;
+}
+
+.theme-card:hover {
+  border-color: var(--current);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.theme-card.selected {
+  border-color: var(--current);
+  box-shadow: 0 0 0 3px var(--current-soft);
+}
+
+.theme-preview {
+  width: 100%;
+  height: 44px;
+  border-radius: var(--r-sm);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  padding: 6px;
+  gap: 4px;
+}
+
+.theme-preview-surface {
+  width: 55%;
+  height: 28px;
+  border-radius: 6px;
+  opacity: 0.9;
+}
+
+.theme-preview-accent {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  opacity: 0.9;
+}
+
+.theme-card-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.theme-emoji {
+  font-size: 14px;
+}
+
+.theme-name {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--tide);
+}
+
+.theme-check {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  color: var(--current);
+  background: var(--surface);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+}
+
+/* ── Warmth slider ── */
+.warmth-slider-wrap {
+  margin: 4px 0 12px;
+}
+
+.warmth-labels-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11.5px;
+  color: var(--tide-soft);
+  margin-bottom: 8px;
+}
+
+.warmth-pole-label {
+  font-weight: 500;
+}
+
+.warmth-range {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  border-radius: var(--r-pill);
+  background: linear-gradient(to right, var(--current-soft) 0%, var(--current) 100%);
+  outline: none;
+  cursor: pointer;
+  margin-bottom: 8px;
+}
+
+.warmth-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--current);
+  box-shadow: 0 0 0 3px var(--current-soft), var(--shadow-sm);
+  cursor: pointer;
+  transition: transform 0.12s;
+}
+
+.warmth-range::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+.warmth-pips {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 2px;
+}
+
+.warmth-pip {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--driftwood-soft);
+  transition: background 0.15s, transform 0.12s;
+}
+
+.warmth-pip.active {
+  background: var(--current);
+  transform: scale(1.4);
+}
+
+.warmth-description {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 10px 14px;
+  background: var(--current-softer);
+  border-radius: var(--r-md);
+  border: 1px solid var(--current-soft);
+}
+
+.warmth-level-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--current-deep);
+}
+
+.warmth-level-desc {
+  font-size: 12px;
+  color: var(--tide-soft);
+}
+
+/* ── Reminders ── */
+.notif-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: var(--r-md);
+  font-size: 12.5px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.notif-banner.notif-ok {
+  background: rgba(79, 142, 109, 0.10);
+  border: 1px solid rgba(79, 142, 109, 0.25);
+  color: var(--mood-happy);
+}
+
+.notif-banner.notif-warn {
+  background: var(--coral-soft);
+  border: 1px solid rgba(193, 97, 74, 0.25);
+  color: var(--coral-deep);
+}
+
+.notif-banner.notif-info {
+  background: var(--current-softer);
+  border: 1px solid var(--current-soft);
+  color: var(--tide-soft);
+}
+
+.notif-permission-btn,
+.notif-test-btn {
+  margin-left: auto;
+  padding: 5px 12px;
+  border-radius: var(--r-sm);
+  border: 1px solid currentColor;
+  background: transparent;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  color: inherit;
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+
+.notif-permission-btn:hover,
+.notif-test-btn:hover {
+  background: rgba(0,0,0,0.08);
+}
+
+.reminder-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.reminder-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--driftwood-soft);
+  border-radius: var(--r-md);
+  transition: opacity 0.2s;
+}
+
+.reminder-item.disabled {
+  opacity: 0.5;
+}
+
+.reminder-item-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+
+.reminder-item-info {
+  min-width: 0;
+}
+
+.reminder-item-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--tide);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.reminder-custom-label {
+  font-weight: 400;
+  color: var(--tide-soft);
+  margin-left: 4px;
+}
+
+.reminder-item-time {
+  font-size: 11.5px;
+  color: var(--driftwood);
+  margin-top: 2px;
+}
+
+/* Toggle switch */
+.reminder-toggle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.reminder-toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+.toggle-track {
+  display: block;
+  width: 34px;
+  height: 18px;
+  border-radius: var(--r-pill);
+  background: var(--driftwood-soft);
+  transition: background 0.2s;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.toggle-track::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: white;
+  transition: transform 0.2s;
+  box-shadow: var(--shadow-sm);
+}
+
+.reminder-toggle input:checked + .toggle-track {
+  background: var(--current);
+}
+
+.reminder-toggle input:checked + .toggle-track::after {
+  transform: translateX(16px);
+}
+
+.reminder-delete-btn {
+  padding: 5px;
+  border: none;
+  background: transparent;
+  color: var(--driftwood);
+  cursor: pointer;
+  border-radius: var(--r-sm);
+  display: flex;
+  align-items: center;
+  transition: color 0.15s, background 0.15s;
+  flex-shrink: 0;
+}
+
+.reminder-delete-btn:hover {
+  color: var(--coral);
+  background: var(--coral-soft);
+}
+
+/* Add reminder form */
+.reminder-form {
+  background: var(--surface-2);
+  border: 1px solid var(--driftwood-soft);
+  border-radius: var(--r-md);
+  padding: 14px;
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.reminder-form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.form-label {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--driftwood);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.form-select,
+.form-input {
+  padding: 7px 10px;
+  background: var(--surface);
+  border: 1px solid var(--driftwood-soft);
+  border-radius: var(--r-sm);
+  font-size: 13px;
+  color: var(--tide);
+  font-family: var(--font-body);
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.form-select:focus,
+.form-input:focus {
+  border-color: var(--current);
+}
+
+.form-input-time {
+  width: 120px;
+}
+
+.day-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.day-pill {
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--driftwood-soft);
+  background: transparent;
+  font-size: 12px;
+  color: var(--tide-soft);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.day-pill.active {
+  background: var(--current-softer);
+  border-color: var(--current);
+  color: var(--current-deep);
+  font-weight: 600;
+}
+
+.day-pill:hover:not(.active) {
+  background: var(--surface-2);
+  border-color: var(--driftwood);
+}
+
+.reminder-form-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.form-save-btn {
+  padding: 8px 16px;
+  background: var(--current);
+  border: none;
+  border-radius: var(--r-sm);
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.form-save-btn:hover {
+  background: var(--current-deep);
+}
+
+.form-cancel-btn {
+  padding: 8px 14px;
+  background: transparent;
+  border: 1px solid var(--driftwood-soft);
+  border-radius: var(--r-sm);
+  color: var(--tide-soft);
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.form-cancel-btn:hover {
+  background: var(--surface-2);
+}
+
+.add-reminder-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 10px;
+  padding: 8px 14px;
+  background: transparent;
+  border: 1px dashed var(--current-soft);
+  border-radius: var(--r-md);
+  color: var(--current-deep);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  width: 100%;
+  justify-content: center;
+}
+
+.add-reminder-btn:hover:not(:disabled) {
+  background: var(--current-softer);
+  border-color: var(--current);
+}
+
+.add-reminder-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

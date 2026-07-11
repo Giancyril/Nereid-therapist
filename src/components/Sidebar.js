@@ -1,5 +1,5 @@
 import React from 'react';
-import { MessageSquare, History, BookOpen, BarChart2, ChevronLeft, ChevronRight, Plus, Trash2, Shield, BookMarked, User, Home } from 'lucide-react';
+import { MessageSquare, History, BookOpen, BarChart2, ChevronLeft, ChevronRight, Plus, Trash2, Shield, BookMarked, User, Home, Settings } from 'lucide-react';
 import './Sidebar.css';
 
 const NereidIcon = () => (
@@ -41,13 +41,14 @@ const Sidebar = ({
 }) => {
 
   const navItems = [
-    { id: 'chat', label: 'Chat', icon: <MessageSquare size={16} /> },
-    { id: 'journal', label: 'Journal', icon: <BookMarked size={16} /> },
-    { id: 'history', label: 'History', icon: <History size={16} /> },
+    { id: 'chat',        label: 'Chat',        icon: <MessageSquare size={16} /> },
+    { id: 'journal',     label: 'Journal',     icon: <BookMarked size={16} /> },
+    { id: 'history',     label: 'History',     icon: <History size={16} /> },
     { id: 'safety-plan', label: 'Safety Plan', icon: <Shield size={16} /> },
-    { id: 'resources', label: 'Resources', icon: <BookOpen size={16} /> },
-    { id: 'insights', label: 'Insights', icon: <BarChart2 size={16} /> },
-    { id: 'profile', label: 'My Profile', icon: <User size={16} /> },
+    { id: 'resources',   label: 'Resources',   icon: <BookOpen size={16} /> },
+    { id: 'insights',    label: 'Insights',    icon: <BarChart2 size={16} /> },
+    { id: 'profile',     label: 'My Profile',  icon: <User size={16} /> },
+    { id: 'settings',    label: 'Settings',    icon: <Settings size={16} /> },
   ];
 
   return (

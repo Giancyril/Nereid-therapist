@@ -63,6 +63,7 @@ class ChatRequest(BaseModel):
     conversation_history: Optional[List[ChatMessage]] = []
     style: Optional[str] = "reflective"
     profile_context: Optional[str] = ""
+    warmth: Optional[int] = 3  # 1=very casual & warm, 5=calm & formal
 
 class ChatResponse(BaseModel):
     reply: str
@@ -214,10 +215,20 @@ STYLE_PROMPTS = {
 """
 }
 
-def get_nereid_reply(conversation_history: List[Dict], user_text: str, style: str = "reflective", profile_context: str = "") -> str:
+WARMTH_PROMPTS = {
+    1: "[TONE] Be very warm, casual, and conversational. Use informal language, contractions, and gentle humour where fitting. Feel like a trusted, caring friend.",
+    2: "[TONE] Be warm and friendly. Use a gentle, reassuring conversational tone. Slightly informal — approachable and caring.",
+    3: "[TONE] Be balanced: warm yet composed. Conversational but thoughtful. Neither clinical nor overly casual.",
+    4: "[TONE] Be measured and thoughtful. Keep language clear and composed. Warm but with a slightly more professional register.",
+    5: "[TONE] Be calm and professional. Use clear, careful language. Maintain a composed, supportive presence — not cold, but more formal.",
+}
+
+def get_nereid_reply(conversation_history: List[Dict], user_text: str, style: str = "reflective", profile_context: str = "", warmth: int = 3) -> str:
     """Get Nereid's reply using Ollama."""
     style_fragment = STYLE_PROMPTS.get(style, STYLE_PROMPTS["reflective"])
-    combined_system = SYSTEM + "\n" + style_fragment
+    warmth_level = max(1, min(5, int(warmth) if warmth else 3))
+    warmth_fragment = WARMTH_PROMPTS[warmth_level]
+    combined_system = SYSTEM + "\n" + style_fragment + "\n" + warmth_fragment
     if profile_context and profile_context.strip():
         combined_system += "\n" + profile_context
     messages = [
@@ -304,7 +315,8 @@ async def chat(request: ChatRequest):
             history,
             request.message.strip(),
             request.style or "reflective",
-            request.profile_context or ""
+            request.profile_context or "",
+            request.warmth if request.warmth is not None else 3
         )
         
         # Analyze the user's emotional state

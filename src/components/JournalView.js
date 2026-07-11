@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import { Plus, Trash2, Save, ChevronLeft, BookMarked, Heart, Sparkles } from 'lucide-react';
+import { Plus, Trash2, Save, ChevronLeft, Heart, Sparkles } from 'lucide-react';
 import { getJournalEntries, saveJournalEntry, deleteJournalEntry } from '../utils/journalStorage';
 import CrisisResourceCard from './CrisisResourceCard';
 import SafetyPlanDrawer from './SafetyPlanDrawer';

@@ -8,7 +8,10 @@ import Home from './components/Home';
 import SafetyPlanView from './components/SafetyPlanView';
 import JournalView from './components/JournalView';
 import ProfileView from './components/ProfileView';
+import SettingsView from './components/SettingsView';
 import { getSafetyPlan, getEscalationEvents, saveEscalationEvents } from './utils/safetyStorage';
+import { applyTheme, getTheme } from './utils/themeStorage';
+import { scheduleReminders } from './utils/remindersStorage';
 import './App.css';
 
 const getInitialChats = () => {
@@ -60,6 +63,12 @@ function App() {
   useEffect(() => {
     localStorage.setItem('nereid_current_chat_id', currentChatId);
   }, [currentChatId]);
+
+  // Apply saved theme and schedule reminders on first mount
+  useEffect(() => {
+    applyTheme(getTheme());
+    scheduleReminders();
+  }, []);
 
   // Foreground check for safety plan check-in nudges
   useEffect(() => {
@@ -239,6 +248,8 @@ function App() {
         return <JournalView onSelectTab={setActiveTab} />;
       case 'profile':
         return <ProfileView />;
+      case 'settings':
+        return <SettingsView />;
       case 'insights':
         return <Insights chats={chats} />;
       default:

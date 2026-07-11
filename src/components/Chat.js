@@ -185,10 +185,12 @@ const Chat = ({ chatId = 'default', messages = [], onUpdateMessages, onSelectTab
 
     try {
       const profileContext = buildProfileContext(getUserProfile());
+      const warmth = parseInt(localStorage.getItem('nereid_warmth') || '3', 10);
       const response = await axios.post('http://localhost:8000/api/chat', {
         message: text.trim(),
         style: selectedStyle,
         profile_context: profileContext,
+        warmth,
         conversation_history: messages.slice(1).map(msg => ({
           role: msg.sender === 'user' ? 'user' : 'assistant',
           content: msg.text,

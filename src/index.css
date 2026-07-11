@@ -57,6 +57,96 @@
   --font-body: 'Work Sans', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
+/* ─────────────────────────────────────────────────────────────────────────
+   Nereid Themes — override CSS tokens per data-theme attribute on <html>.
+   Dark Tide is the default (:root above) and needs no override block.
+   ───────────────────────────────────────────────────────────────────────── */
+
+/* ── Light Warm ── warm sand & earthy amber ── */
+:root[data-theme="light-calm"] {
+  --mist: #FBF8F4;
+  --surface: #FFFFFF;
+  --surface-2: #F5F1EB;
+  --tide: #2C2016;
+  --tide-soft: #5C4A35;
+  --current: #8B7355;
+  --current-deep: #6B5740;
+  --current-soft: rgba(139, 115, 85, 0.11);
+  --current-softer: rgba(139, 115, 85, 0.06);
+  --driftwood: #9A8C7A;
+  --driftwood-soft: rgba(154, 140, 122, 0.20);
+  --coral: #C1614A;
+  --coral-soft: rgba(193, 97, 74, 0.10);
+  --coral-deep: #A64F3B;
+  --mood-anxious: #C99A3D;
+  --mood-overwhelmed: #C1614A;
+  --mood-sad: #6B84A3;
+  --mood-happy: #4F8F6D;
+  --mood-neutral: #9C9484;
+  --mood-crisis: #A8402E;
+  --advice-purple: #7D6B94;
+  --shadow-sm: 0 1px 2px rgba(44, 32, 22, 0.07), 0 1px 1px rgba(44, 32, 22, 0.04);
+  --shadow-md: 0 12px 28px -12px rgba(44, 32, 22, 0.16), 0 2px 8px rgba(44, 32, 22, 0.06);
+  --shadow-lg: 0 24px 48px -16px rgba(44, 32, 22, 0.20), 0 4px 12px rgba(44, 32, 22, 0.08);
+}
+
+/* ── Ocean Depth ── full dark: deep navy + bright cyan ── */
+:root[data-theme="ocean-depth"] {
+  --mist: #0D1B2A;
+  --surface: #152234;
+  --surface-2: #1C2D42;
+  --tide: #D6E8F7;
+  --tide-soft: #8CBBDA;
+  --current: #4FC3E8;
+  --current-deep: #2FA8D0;
+  --current-soft: rgba(79, 195, 232, 0.13);
+  --current-softer: rgba(79, 195, 232, 0.07);
+  --driftwood: #6B8BA4;
+  --driftwood-soft: rgba(107, 139, 164, 0.28);
+  --coral: #FF8C69;
+  --coral-soft: rgba(255, 140, 105, 0.13);
+  --coral-deep: #E87050;
+  --mood-anxious: #E0B34A;
+  --mood-overwhelmed: #FF8C69;
+  --mood-sad: #7BAED4;
+  --mood-happy: #5FBC8A;
+  --mood-neutral: #8BA3B5;
+  --mood-crisis: #FF6B6B;
+  --advice-purple: #A98FD4;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.30), 0 1px 1px rgba(0, 0, 0, 0.18);
+  --shadow-md: 0 12px 28px -12px rgba(0, 0, 0, 0.45), 0 2px 8px rgba(0, 0, 0, 0.22);
+  --shadow-lg: 0 24px 48px -16px rgba(0, 0, 0, 0.55), 0 4px 12px rgba(0, 0, 0, 0.28);
+}
+
+/* ── Lavender Dusk ── deep purple-grey + warm lilac ── */
+:root[data-theme="lavender-dusk"] {
+  --mist: #1A1625;
+  --surface: #231E32;
+  --surface-2: #2C2640;
+  --tide: #E8E0F4;
+  --tide-soft: #B8A8D4;
+  --current: #9B7FD4;
+  --current-deep: #7A5EB8;
+  --current-soft: rgba(155, 127, 212, 0.13);
+  --current-softer: rgba(155, 127, 212, 0.07);
+  --driftwood: #7A6B95;
+  --driftwood-soft: rgba(122, 107, 149, 0.28);
+  --coral: #F07B8B;
+  --coral-soft: rgba(240, 123, 139, 0.13);
+  --coral-deep: #D45E70;
+  --mood-anxious: #DBA84A;
+  --mood-overwhelmed: #F07B8B;
+  --mood-sad: #7BA0CF;
+  --mood-happy: #6BBF8A;
+  --mood-neutral: #9A8AB0;
+  --mood-crisis: #FF7070;
+  --advice-purple: #BBA0E8;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35), 0 1px 1px rgba(0, 0, 0, 0.20);
+  --shadow-md: 0 12px 28px -12px rgba(0, 0, 0, 0.50), 0 2px 8px rgba(0, 0, 0, 0.25);
+  --shadow-lg: 0 24px 48px -16px rgba(0, 0, 0, 0.60), 0 4px 12px rgba(0, 0, 0, 0.30);
+}
+
+
 * {
   box-sizing: border-box;
 }
