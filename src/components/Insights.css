@@ -506,3 +506,304 @@
     align-self: flex-start;
   }
 }
+
+/* ── Export Buttons ──────────────────────────────────────────────────────── */
+.insights-export-group {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 0 16px;
+}
+
+.export-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 14px;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--driftwood-soft);
+  background: var(--surface);
+  color: var(--tide-soft);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  font-family: var(--font-body);
+}
+
+.export-btn:hover {
+  background: var(--current-softer);
+  color: var(--current-deep);
+  border-color: var(--current);
+}
+
+/* ── Digest Card ─────────────────────────────────────────────────────────── */
+.digest-card {
+  background: var(--surface);
+  border-radius: var(--r-lg);
+  border: 1px solid var(--driftwood-soft);
+  padding: 16px 20px;
+  margin: 0 2rem 1.25rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.digest-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.digest-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.digest-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--tide);
+  font-family: var(--font-display);
+}
+
+.digest-period-toggle {
+  display: flex;
+  background: var(--surface-2);
+  border: 1px solid var(--driftwood-soft);
+  border-radius: var(--r-sm);
+  overflow: hidden;
+}
+
+.period-btn {
+  padding: 4px 12px;
+  background: transparent;
+  border: none;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--tide-soft);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  font-family: var(--font-body);
+}
+
+.period-btn.active {
+  background: var(--current);
+  color: white;
+  font-weight: 600;
+}
+
+.digest-empty {
+  font-size: 13px;
+  color: var(--driftwood);
+  font-style: italic;
+  text-align: center;
+  padding: 10px 0;
+}
+
+.digest-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.digest-summary-row {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.digest-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.digest-stat-val {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--tide);
+  font-family: var(--font-display);
+  line-height: 1;
+}
+
+.digest-stat-of {
+  font-size: 13px;
+  color: var(--driftwood);
+  font-weight: 400;
+}
+
+.digest-stat-label {
+  font-size: 11.5px;
+  color: var(--tide-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.digest-delta {
+  font-size: 11px;
+  font-weight: 700;
+  margin-left: 4px;
+  border-radius: 4px;
+  padding: 1px 4px;
+}
+
+.delta-better { color: var(--mood-happy); background: rgba(79,142,109,0.10); }
+.delta-worse  { color: var(--coral);       background: var(--coral-soft); }
+
+.digest-mood-pill {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--current-deep);
+  background: var(--current-softer);
+  padding: 2px 10px;
+  border-radius: var(--r-pill);
+  text-transform: capitalize;
+}
+
+.digest-topics {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.digest-topics-label {
+  font-size: 11.5px;
+  color: var(--driftwood);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  margin-right: 2px;
+}
+
+.digest-topic-chip {
+  padding: 3px 10px;
+  border-radius: var(--r-pill);
+  background: var(--surface-2);
+  border: 1px solid var(--driftwood-soft);
+  font-size: 12.5px;
+  color: var(--tide-soft);
+}
+
+.chip-count {
+  font-weight: 700;
+  color: var(--current-deep);
+}
+
+/* ── Time of Day bars ────────────────────────────────────────────────────── */
+.insights-time-grid {
+  grid-template-columns: 1fr 1fr;
+}
+
+.tod-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.tod-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tod-label {
+  font-size: 12.5px;
+  color: var(--tide-soft);
+  width: 100px;
+  flex-shrink: 0;
+}
+
+.tod-bar-bg {
+  flex: 1;
+  height: 10px;
+  border-radius: var(--r-pill);
+  background: var(--surface-2);
+  overflow: hidden;
+}
+
+.tod-bar-fill {
+  height: 100%;
+  border-radius: var(--r-pill);
+  transition: width 0.4s cubic-bezier(.4,0,.2,1);
+}
+
+.tod-fill-morning   { background: linear-gradient(90deg, #FBC76B, #F7A440); }
+.tod-fill-afternoon { background: linear-gradient(90deg, #4FC3E8, #2FA8D0); }
+.tod-fill-evening   { background: linear-gradient(90deg, #9B7FD4, #7A5EB8); }
+.tod-fill-night     { background: linear-gradient(90deg, #3F7268, #2C534B); }
+
+.tod-count {
+  font-size: 11.5px;
+  color: var(--driftwood);
+  width: 70px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* ── Day of Week bars ────────────────────────────────────────────────────── */
+.dow-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  height: 120px;
+  margin-top: 12px;
+  padding-bottom: 22px;
+  position: relative;
+}
+
+.dow-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  justify-content: flex-end;
+  gap: 4px;
+}
+
+.dow-bar-wrap {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  background: var(--surface-2);
+  border-radius: var(--r-sm) var(--r-sm) 0 0;
+  overflow: hidden;
+  max-height: 80px;
+}
+
+.dow-bar-fill {
+  width: 100%;
+  background: linear-gradient(180deg, var(--current) 0%, var(--current-deep) 100%);
+  border-radius: var(--r-sm) var(--r-sm) 0 0;
+  transition: height 0.4s cubic-bezier(.4,0,.2,1);
+}
+
+.dow-label {
+  font-size: 10.5px;
+  color: var(--driftwood);
+  text-align: center;
+}
+
+.dow-count {
+  font-size: 10px;
+  color: var(--current-deep);
+  font-weight: 600;
+}
+
+/* ── Print stylesheet for PDF export ─────────────────────────────────────── */
+@media print {
+  .insights-header-row,
+  .insights-export-group,
+  .insights-filter-group,
+  .digest-period-toggle { display: none !important; }
+
+  .insights-container { background: white; }
+  .insight-chart-card,
+  .insight-stat-card,
+  .advice-card,
+  .digest-card { break-inside: avoid; border: 1px solid #ccc; box-shadow: none; }
+}
