@@ -248,12 +248,19 @@
   margin-left: 0;
 }
 
-/* ── Recent Chats ── */
-.recent-chats-container {
+/* ── Scrollable Middle Area ── */
+.sidebar-scroll-area {
   flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+}
+
+/* ── Recent Chats ── */
+.recent-chats-container {
+  display: flex;
+  flex-direction: column;
   padding: 16px 8px 6px;
   border-top: 1px solid var(--driftwood-soft);
   margin-top: 8px;
@@ -273,9 +280,6 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
-  overflow-y: auto;
-  overflow-x: hidden;
-  flex: 1;
 }
 
 .recent-chat-item {

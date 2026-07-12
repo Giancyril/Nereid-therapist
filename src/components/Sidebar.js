@@ -70,77 +70,80 @@ const Sidebar = ({
         </button>
       </div>
 
-      {/* ── New Chat ── */}
-      <button className="new-chat-btn" onClick={onNewChat}>
-        <Plus className="btn-plus" size={16} />
-        <span className="btn-label">New Chat</span>
-      </button>
+      {/* ── Scrollable Middle Area ── */}
+      <div className="sidebar-scroll-area">
+        {/* ── New Chat ── */}
+        <button className="new-chat-btn" onClick={onNewChat}>
+          <Plus className="btn-plus" size={16} />
+          <span className="btn-label">New Chat</span>
+        </button>
 
-      {/* ── Navigation ── */}
-      <nav className="sidebar-nav" role="tablist" aria-label="Main Navigation">
-        {navItems.map(item => (
-          <div
-            key={item.id}
-            className={`nav-item ${activeTab === item.id ? 'active' : ''}`}
-            onClick={() => onSelectTab(item.id)}
-            role="tab"
-            tabIndex={0}
-            aria-selected={activeTab === item.id}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                onSelectTab(item.id);
-              }
-            }}
-          >
-            <div className="nav-icon-wrap" aria-hidden="true">{item.icon}</div>
-            <span className="nav-label">{item.label}</span>
-          </div>
-        ))}
-      </nav>
+        {/* ── Navigation ── */}
+        <nav className="sidebar-nav" role="tablist" aria-label="Main Navigation">
+          {navItems.map(item => (
+            <div
+              key={item.id}
+              className={`nav-item ${activeTab === item.id ? 'active' : ''}`}
+              onClick={() => onSelectTab(item.id)}
+              role="tab"
+              tabIndex={0}
+              aria-selected={activeTab === item.id}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  onSelectTab(item.id);
+                }
+              }}
+            >
+              <div className="nav-icon-wrap" aria-hidden="true">{item.icon}</div>
+              <span className="nav-label">{item.label}</span>
+            </div>
+          ))}
+        </nav>
 
-      {/* ── Recent Chats List (Visible only when expanded) ── */}
-      {!collapsed && chats.length > 0 && (
-        <div className="recent-chats-container">
-          <div className="recent-chats-title">Recent Chats</div>
-          <div className="recent-chats-list" role="group" aria-label="Recent chats list">
-            {chats.map(chat => (
-              <div
-                key={chat.id}
-                className={`recent-chat-item ${currentChatId === chat.id && activeTab === 'chat' ? 'active' : ''}`}
-                onClick={() => {
-                  onSelectChat(chat.id);
-                  onSelectTab('chat');
-                }}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
+        {/* ── Recent Chats List (Visible only when expanded) ── */}
+        {!collapsed && chats.length > 0 && (
+          <div className="recent-chats-container">
+            <div className="recent-chats-title">Recent Chats</div>
+            <div className="recent-chats-list" role="group" aria-label="Recent chats list">
+              {chats.map(chat => (
+                <div
+                  key={chat.id}
+                  className={`recent-chat-item ${currentChatId === chat.id && activeTab === 'chat' ? 'active' : ''}`}
+                  onClick={() => {
                     onSelectChat(chat.id);
                     onSelectTab('chat');
-                  }
-                }}
-                aria-label={`Resume conversation: ${chat.title || 'Reflections Chat'}`}
-              >
-                <MessageSquare size={13} className="chat-item-icon" aria-hidden="true" />
-                <span className="chat-item-title">{chat.title || 'Reflections Chat'}</span>
-                <button
-                  className="chat-item-delete"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onDeleteChat(chat.id);
                   }}
-                  title="Delete conversation"
-                  aria-label={`Delete conversation: ${chat.title || 'Reflections Chat'}`}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      onSelectChat(chat.id);
+                      onSelectTab('chat');
+                    }
+                  }}
+                  aria-label={`Resume conversation: ${chat.title || 'Reflections Chat'}`}
                 >
-                  <Trash2 size={14} aria-hidden="true" />
-                </button>
-              </div>
-            ))}
+                  <MessageSquare size={13} className="chat-item-icon" aria-hidden="true" />
+                  <span className="chat-item-title">{chat.title || 'Reflections Chat'}</span>
+                  <button
+                    className="chat-item-delete"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onDeleteChat(chat.id);
+                    }}
+                    title="Delete conversation"
+                    aria-label={`Delete conversation: ${chat.title || 'Reflections Chat'}`}
+                  >
+                    <Trash2 size={14} aria-hidden="true" />
+                  </button>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* ── Footer / User ── */}
       <div className="sidebar-footer">
