@@ -49,11 +49,20 @@ const getInitialChatId = (chatsList) => {
 
 function App() {
   // 'landing' = full-page home (no sidebar), 'dashboard' = sidebar + content
-  const [view, setView] = useState('landing');
+  const [view, setView] = useState(() => localStorage.getItem('nereid_view') || 'landing');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [activeTab, setActiveTab] = useState('chat'); // chat, history, resources, insights
+  const [activeTab, setActiveTab] = useState(() => localStorage.getItem('nereid_active_tab') || 'chat'); // chat, history, resources, insights, settings
   const [chats, setChats] = useState(getInitialChats);
   const [currentChatId, setCurrentChatId] = useState(() => getInitialChatId(getInitialChats()));
+
+  // Persist view and activeTab states
+  useEffect(() => {
+    localStorage.setItem('nereid_view', view);
+  }, [view]);
+
+  useEffect(() => {
+    localStorage.setItem('nereid_active_tab', activeTab);
+  }, [activeTab]);
 
   // Persist chats and current chat ID
   useEffect(() => {
