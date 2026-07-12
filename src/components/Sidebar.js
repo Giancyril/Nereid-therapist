@@ -74,7 +74,7 @@ const Sidebar = ({
       <div className="sidebar-scroll-area">
         {/* ── New Chat ── */}
         <button className="new-chat-btn" onClick={onNewChat}>
-          <Plus className="btn-plus" size={16} />
+          <Plus className="btn-plus" size={17} />
           <span className="btn-label">New Chat</span>
         </button>
 
